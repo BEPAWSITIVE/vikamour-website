@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shop Ethnic & Festive Collection | VIKAMOUR Atelier</title>
+  <meta name="description" content="Explore Vikamour's complete Indian ethnic wear collection: handcrafted Kurtas, Anarkali Sets with Dupatta, Co-Ords, and Flat ₹999 deals with precision filters." />
+  
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%23C88D26%22>वी</text></svg>">
+  
+  <!-- Unified Google Typography: Plus Jakarta Sans for complete site + Oswald / Playball accents -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600;700;800;900&family=Playball&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Master Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="shop-page-body">
+
+  <!-- Top Announcement Bar -->
+  <aside class="announcement-bar" role="complementary" aria-label="Special Offers">
+    <div class="site-container announcement-content">
+      <span>Free Express Shipping across India on all orders over ₹ 1,499</span>
+      <span>•</span>
+      <span><span class="announcement-badge">VIKA10</span> Use code for 10% off your first festive order</span>
+      <span>•</span>
+      <span>15-Day Doorstep Returns & Exchanges</span>
+    </div>
+  </aside>
+
+  <!-- Sticky Main Navigation Header -->
+  <header class="site-header" id="siteHeader">
+    <div class="site-container header-inner">
+      
+      <!-- Brand Identity matching screenshot: वी | VIKAMOUR in warm gold -->
+      <a href="index.html" class="brand-logo" aria-label="Vikamour Homepage">
+        <div class="brand-logo-lockup">
+          <span class="brand-symbol">वी</span>
+          <span class="brand-divider">|</span>
+          <span class="brand-name">VIKAMOUR</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="header-nav" aria-label="Main Navigation">
+        <a href="index.html" class="nav-link">HOME</a>
+        <a href="shop.html" class="nav-link active">ALL OUTFITS</a>
+        <a href="shop.html?category=kurtas" class="nav-link">KURTAS & KURTIS</a>
+        <a href="shop.html?category=dresses" class="nav-link">DRESSES</a>
+        <a href="shop.html?category=ethnic-sets-dupatta" class="nav-link">ETHNIC SETS WITH DUPATTA</a>
+        <a href="shop.html?category=ethnic-sets" class="nav-link">ETHNIC SETS</a>
+        <a href="shop.html?category=co-ords" class="nav-link">CO-ORDS</a>
+        <a href="shop.html?category=sale999" class="nav-link highlight">FLAT ₹999 SALE</a>
+      </nav>
+
+      <!-- Utility Cluster -->
+      <div class="header-actions">
+        <!-- User Profile Icon -->
+        <button class="action-btn" aria-label="User Account" title="My Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+        </button>
+
+        <!-- Search Icon (Scrolls & Focuses In-Shop Search) -->
+        <button class="action-btn" id="headerSearchBtn" onclick="document.getElementById('shopSearchInput')?.focus();" aria-label="Search" title="Search Outfits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+
+        <!-- Wishlist Trigger Button -->
+        <button class="action-btn" id="wishlistTriggerBtn" aria-label="Wishlist" title="Saved Outfits">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+          </svg>
+          <span class="badge-count" id="wishlistBadgeCount">0</span>
+        </button>
+
+        <!-- Cart Trigger Button -->
+        <button class="action-btn" id="cartTriggerBtn" aria-label="Shopping Bag" title="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="badge-count" id="cartBadgeCount">0</span>
+        </button>
+
+        <!-- Currency Selector Pill -->
+        <div class="currency-select-wrapper" title="Change Currency">
+          <select class="currency-select" id="currencySelect" aria-label="Currency selection">
+            <option value="INR" selected>INR</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+          <span class="currency-arrow">▼</span>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button class="action-btn mobile-menu-toggle" id="mobileMenuToggle" aria-label="Open mobile menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <main>
+    <!-- Shop Hero / Breadcrumbs Banner -->
+    <section class="shop-hero-section">
+      <div class="site-container">
+        
+        <nav class="shop-breadcrumbs" aria-label="Breadcrumb">
+          <a href="index.html">Home</a>
+          <span class="sep">/</span>
+          <a href="shop.html">Shop Collection</a>
+          <span class="sep">/</span>
+          <span class="current" id="shopBreadcrumbCurrent">All Festive & Everyday Creations</span>
+        </nav>
+
+        <div class="shop-hero-header">
+          <h1 class="shop-hero-title" id="shopHeroTitle">All Festive & Everyday Creations</h1>
+          <p class="shop-hero-subtitle">
+            Explore authentic handblock prints, rich zardozi needlework, kalidar Anarkali sets with Banarasi dupattas, and Flat ₹999 festive deals. Handcrafted with breathable natural fabrics.
+          </p>
+        </div>
+
+        <!-- Quick Pill Navigation -->
+        <div class="shop-pill-nav" role="tablist">
+          <button class="shop-pill-btn active" data-category="all">All Outfits</button>
+          <button class="shop-pill-btn sale-pill" data-category="sale999">🔥 Flat ₹999 Deals</button>
+          <button class="shop-pill-btn" data-category="kurtas">Kurtas & Kurtis</button>
+          <button class="shop-pill-btn" data-category="ethnic-sets-dupatta">Sets with Dupatta</button>
+          <button class="shop-pill-btn" data-category="ethnic-sets">Ethnic Sets</button>
+          <button class="shop-pill-btn" data-category="co-ords">Co-Ords</button>
+          <button class="shop-pill-btn" data-category="dresses">Festive Maxi Dresses</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Two-Column Shop Layout (Sticky Sidebar + Catalog Grid) -->
+    <section class="site-container">
+      <div class="shop-main-layout">
+        
+        <!-- Desktop Sticky Filter Sidebar -->
+        <aside class="shop-sidebar" id="desktopShopSidebar" aria-label="Catalog Filters">
+          
+          <div class="sidebar-header">
+            <div class="sidebar-title-wrap">
+              <span class="sidebar-title">Filters</span>
+              <span class="filter-count-badge" id="activeFiltersCountBadge" style="display:none;">0</span>
+            </div>
+            <button class="sidebar-clear-btn" id="sidebarClearBtn">Clear All</button>
+          </div>
+
+          <!-- Filter Group 1: Category -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Wardrobe Category</h4>
+            <div class="filter-options-list">
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="all" checked />
+                  <span>All Creations</span>
+                </span>
+                <span class="filter-option-count" id="catCount-all">(14)</span>
+              </label>
+              
+              <label class="filter-option-label" style="color:#E11D48; font-weight:700;">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="sale999" />
+                  <span>🔥 Flat ₹999 Deals</span>
+                </span>
+                <span class="filter-option-count" id="catCount-sale999" style="color:#E11D48;">(4)</span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="kurtas" />
+                  <span>Kurtas & Kurtis</span>
+                </span>
+                <span class="filter-option-count" id="catCount-kurtas">(4)</span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="ethnic-sets-dupatta" />
+                  <span>Sets with Dupatta</span>
+                </span>
+                <span class="filter-option-count" id="catCount-ethnic-sets-dupatta">(4)</span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="ethnic-sets" />
+                  <span>Ethnic Sets (Kurta+Pant)</span>
+                </span>
+                <span class="filter-option-count" id="catCount-ethnic-sets">(3)</span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="co-ords" />
+                  <span>Contemporary Co-Ords</span>
+                </span>
+                <span class="filter-option-count" id="catCount-co-ords">(3)</span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="categoryFilter" value="dresses" />
+                  <span>Festive Maxi Dresses</span>
+                </span>
+                <span class="filter-option-count" id="catCount-dresses">(3)</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Filter Group 2: Price Range & Brackets -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Price Range</h4>
+            <div class="price-slider-box">
+              <input type="range" class="price-slider-range" id="priceRangeSlider" min="999" max="6000" step="100" value="6000" aria-label="Max price cap" />
+              <div class="price-slider-labels">
+                <span>₹ 999</span>
+                <span id="currentPriceCap">₹ 6,000</span>
+              </div>
+            </div>
+
+            <!-- Quick Price Band Pills -->
+            <div class="price-bracket-pills">
+              <button class="price-bracket-btn active" data-bracket="all">All Prices</button>
+              <button class="price-bracket-btn" data-bracket="under1000">Under ₹1,000 (Flat ₹999)</button>
+              <button class="price-bracket-btn" data-bracket="1000-2000">₹1,000 - ₹2,000</button>
+              <button class="price-bracket-btn" data-bracket="2000-3500">₹2,000 - ₹3,500</button>
+              <button class="price-bracket-btn" data-bracket="above3500">Above ₹3,500 (Regal Sets)</button>
+            </div>
+          </div>
+
+          <!-- Filter Group 3: Festive Shades -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Festive Shade / Color</h4>
+            <div class="filter-color-swatches-grid">
+              <div class="color-swatch-row" data-color="pink">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #E0115F;"></span>
+                  <span>Rani Pink & Fuchsia</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="mustard">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #E5A93B;"></span>
+                  <span>Mustard & Haldi Gold</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="indigo">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #1A2E40;"></span>
+                  <span>Indigo & Bagru Blue</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="emerald">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #006A4E;"></span>
+                  <span>Emerald & Forest Green</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="maroon">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #63101E;"></span>
+                  <span>Ruby & Wine Maroon</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="teal">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #008080;"></span>
+                  <span>Royal Teal & Peacock</span>
+                </span>
+              </div>
+
+              <div class="color-swatch-row" data-color="blue">
+                <span class="filter-option-left">
+                  <span class="color-swatch-circle" style="background-color: #AFEEEE;"></span>
+                  <span>Ice Blue & Pastel Sage</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Group 4: Sizes -->
+          <div class="filter-group-block">
+            <div class="filter-group-title">
+              <span>Size</span>
+              <button style="font-size:0.72rem; color:var(--color-brand-gold-dark); background:none; border:none; text-decoration:underline; cursor:pointer;" onclick="document.getElementById('sizeGuideModal').classList.add('active'); document.body.classList.add('modal-open');">Size Guide</button>
+            </div>
+            <div class="filter-sizes-chips-grid">
+              <button class="filter-size-toggle-btn" data-size="XS">XS</button>
+              <button class="filter-size-toggle-btn" data-size="S">S</button>
+              <button class="filter-size-toggle-btn" data-size="M">M</button>
+              <button class="filter-size-toggle-btn" data-size="L">L</button>
+              <button class="filter-size-toggle-btn" data-size="XL">XL</button>
+              <button class="filter-size-toggle-btn" data-size="XXL">XXL</button>
+            </div>
+          </div>
+
+          <!-- Filter Group 5: Fabric & Craft -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Heritage Fabric</h4>
+            <div class="filter-options-list">
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="fabricFilter" value="cotton" />
+                  <span>Pure Cotton & Mulmul</span>
+                </span>
+              </label>
+              
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="fabricFilter" value="chanderi-silk" />
+                  <span>Chanderi Silk Blend</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="fabricFilter" value="georgette" />
+                  <span>Poly Georgette</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="fabricFilter" value="modal-satin" />
+                  <span>Modal Satin</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="fabricFilter" value="jacquard" />
+                  <span>Zari Jacquard</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Filter Group 6: Occasion -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Occasion</h4>
+            <div class="filter-options-list">
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="occasionFilter" value="festive" />
+                  <span>Festive Puja & Diwali</span>
+                </span>
+              </label>
+              
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="occasionFilter" value="wedding" />
+                  <span>Wedding & Sangeet</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="occasionFilter" value="daily" />
+                  <span>Daily & Office Wear</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="checkbox" name="occasionFilter" value="party" />
+                  <span>Evening Fusion Soirée</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Filter Group 7: Discount & Offers -->
+          <div class="filter-group-block">
+            <h4 class="filter-group-title">Special Offers</h4>
+            <div class="filter-options-list">
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="discountFilter" value="all" checked />
+                  <span>All Creations</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label" style="color:#E11D48; font-weight:700;">
+                <span class="filter-option-left">
+                  <input type="radio" name="discountFilter" value="sale999" />
+                  <span>Flat ₹999 Steals</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="discountFilter" value="30" />
+                  <span>30% Off & Above</span>
+                </span>
+              </label>
+
+              <label class="filter-option-label">
+                <span class="filter-option-left">
+                  <input type="radio" name="discountFilter" value="50" />
+                  <span>50% Off & Above</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Main Catalog Results Content Area -->
+        <div class="shop-content-area">
+          
+          <!-- Top Refinement & Sort Toolbar -->
+          <div class="shop-toolbar-row">
+            <div class="shop-status-text">
+              Showing <strong id="shopResultsCount">14</strong> outfits
+            </div>
+
+            <div class="shop-toolbar-controls">
+              <!-- Mobile Filters Toggle Button -->
+              <button class="mobile-filter-open-btn" id="mobileFilterOpenBtn">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                </svg>
+                <span>Filters & Refine</span>
+              </button>
+
+              <!-- In-Shop Realtime Search -->
+              <div class="shop-search-wrapper">
+                <svg class="shop-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="shopSearchInput" class="shop-search-input" placeholder="Search kurtas, zardozi..." aria-label="Search within collection" />
+                <button class="shop-search-clear" id="shopSearchClear" title="Clear search">&times;</button>
+              </div>
+
+              <!-- Sort Dropdown -->
+              <div>
+                <select id="shopSortSelect" class="shop-sort-select" aria-label="Sort products">
+                  <option value="featured">Curated Featured</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="rating">Highest Rated</option>
+                  <option value="newest">New Festive Additions</option>
+                  <option value="discount">Biggest Discounts</option>
+                </select>
+              </div>
+
+              <!-- Grid Column View Switcher -->
+              <div class="grid-cols-selector" title="Change column view">
+                <button class="grid-col-btn" data-cols="2">2</button>
+                <button class="grid-col-btn active" data-cols="3">3</button>
+                <button class="grid-col-btn" data-cols="4">4</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Filter Tags Row -->
+          <div class="shop-active-chips-strip" id="shopActiveChipsStrip"></div>
+
+          <!-- Products Grid -->
+          <div class="products-grid" id="shopProductsGrid">
+            <!-- Dynamically populated by shop.js -->
+          </div>
+
+          <!-- Empty Results State -->
+          <div class="shop-empty-state" id="shopEmptyState" style="display:none;">
+            <div class="shop-empty-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </div>
+            <h3 class="shop-empty-title">No Outfits Match Your Filters</h3>
+            <p class="shop-empty-desc">
+              We couldn't find any creations matching your specific selection. Try clearing some filter tags or explore our featured festive highlights.
+            </p>
+            <button class="btn btn-primary" onclick="resetAllShopFilters()">
+              Reset All Filters
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Mobile Filter Slide-Over Drawer -->
+  <aside class="mobile-filter-drawer-pane" id="mobileFilterDrawer" role="dialog" aria-modal="true" aria-label="Filters Drawer">
+    <div class="mobile-filter-drawer-header">
+      <h3 style="font-size: 1.1rem; font-weight: 800; text-transform: uppercase;">Filters</h3>
+      <button class="drawer-close-btn" id="mobileFilterCloseBtn" aria-label="Close filters">&times;</button>
+    </div>
+
+    <div class="mobile-filter-drawer-body">
+      <!-- Quick Categories -->
+      <div class="filter-group-block">
+        <h4 class="filter-group-title">Wardrobe Category</h4>
+        <div class="filter-options-list">
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="all" checked />
+              <span>All Outfits</span>
+            </span>
+          </label>
+          <label class="filter-option-label" style="color:#E11D48; font-weight:700;">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="sale999" />
+              <span>🔥 Flat ₹999 Deals</span>
+            </span>
+          </label>
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="kurtas" />
+              <span>Kurtas & Kurtis</span>
+            </span>
+          </label>
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="ethnic-sets-dupatta" />
+              <span>Sets with Dupatta</span>
+            </span>
+          </label>
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="ethnic-sets" />
+              <span>Ethnic Sets</span>
+            </span>
+          </label>
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="co-ords" />
+              <span>Co-Ords</span>
+            </span>
+          </label>
+          <label class="filter-option-label">
+            <span class="filter-option-left">
+              <input type="radio" name="categoryFilterMobile" value="dresses" />
+              <span>Festive Dresses</span>
+            </span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="mobile-filter-drawer-footer">
+      <button class="btn btn-outline" style="flex:1;" onclick="resetAllShopFilters();">Reset</button>
+      <button class="btn btn-primary" style="flex:2;" id="mobileFilterApplyBtn">Apply Filters</button>
+    </div>
+  </aside>
+
+  <!-- Side Drawer Backdrop -->
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- Slide-Out Shopping Bag Drawer -->
+  <aside class="side-drawer right" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Shopping Bag">
+    <div class="drawer-header">
+      <div class="drawer-title-row">
+        <h3>Your Shopping Bag</h3>
+        <span class="drawer-subtitle">Free Express Shipping across India over ₹ 1,499</span>
+      </div>
+      <button class="drawer-close-btn" id="cartDrawerClose" aria-label="Close bag">&times;</button>
+    </div>
+
+    <div class="shipping-meter-box">
+      <div class="shipping-meter-text" id="shippingMeterText">
+        Add <strong>₹ 1,499</strong> more for Complimentary Express Shipping!
+      </div>
+      <div class="shipping-progress-track">
+        <div class="shipping-progress-bar" id="shippingProgressBar"></div>
+      </div>
+    </div>
+
+    <div class="drawer-body">
+      <div class="cart-items-list" id="cartItemsList"></div>
+
+      <div class="drawer-empty-state" id="cartEmptyState" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <h4>Your Shopping Bag is Empty</h4>
+        <p style="font-size: 0.84rem; color: var(--color-slate-medium); margin-top: 0.35rem;">
+          Explore our festive ethnic curation to discover timeless apparel.
+        </p>
+        <button class="btn btn-primary" style="margin-top: 1.5rem;" onclick="closeAllDrawers();">
+          Browse Creations
+        </button>
+      </div>
+    </div>
+
+    <div class="drawer-footer" id="cartFooter">
+      <div class="promo-code-box">
+        <input type="text" class="promo-input" id="promoInput" placeholder="Privilege Code (e.g. VIKA10, WELCOME20)" />
+        <button class="promo-apply-btn" id="promoApplyBtn">Apply</button>
+      </div>
+      
+      <div class="promo-applied-badge" id="promoAppliedBadge">
+        <span id="promoAppliedText"></span>
+        <button id="removePromoBtn" style="color:var(--color-error); font-weight:700;">&times;</button>
+      </div>
+
+      <div class="order-calculation-rows">
+        <div class="calc-row">
+          <span>Subtotal</span>
+          <strong id="cartSubtotalAmount">₹ 0</strong>
+        </div>
+        <div class="calc-row" id="cartDiscountRow" style="display: none; color: var(--color-error);">
+          <span>Privilege Discount</span>
+          <strong id="cartDiscountValue">-₹ 0</strong>
+        </div>
+        <div class="calc-row">
+          <span>Courier Shipping</span>
+          <strong id="cartShippingValue">FREE</strong>
+        </div>
+        <div class="calc-row">
+          <span>Estimated GST (12%)</span>
+          <strong id="cartTaxValue">₹ 0</strong>
+        </div>
+        <div class="calc-row total-row">
+          <span>Grand Total</span>
+          <strong class="grand-total-amount" id="cartTotalAmount">₹ 0</strong>
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-block checkout-btn" id="checkoutTriggerBtn">
+        <span>Proceed To Secure Checkout</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </button>
+      
+      <p style="font-size: 0.7rem; text-align: center; color: var(--color-slate-light); margin-top: 0.75rem;">
+        🔒 Encrypted 256-bit checkout • UPI, Cards & NetBanking Accepted
+      </p>
+    </div>
+  </aside>
+
+  <!-- Slide-Out Wishlist Drawer -->
+  <aside class="side-drawer right" id="wishlistDrawer" role="dialog" aria-modal="true" aria-label="Saved Outfits">
+    <div class="drawer-header">
+      <div class="drawer-title-row">
+        <h3>Saved Outfits</h3>
+        <span class="drawer-subtitle">Your personal festive wishlist</span>
+      </div>
+      <button class="drawer-close-btn" id="wishlistDrawerClose" aria-label="Close wishlist">&times;</button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="cart-items-list" id="wishlistItemsList"></div>
+
+      <div class="drawer-empty-state" id="wishlistEmptyState" style="display:none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+        <h4>Your Wishlist is Empty</h4>
+        <p style="font-size: 0.84rem; color: var(--color-slate-medium); margin-top: 0.35rem;">
+          Click the heart icon on any creation to save it for your festivities.
+        </p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Mobile Navigation Drawer -->
+  <aside class="side-drawer left" id="mobileNavDrawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+    <div class="drawer-header">
+      <div class="brand-name" style="font-size: 1.25rem;">VIKAMOUR</div>
+      <button class="drawer-close-btn" id="mobileDrawerClose" aria-label="Close navigation">&times;</button>
+    </div>
+    <ul class="mobile-nav-list">
+      <li class="mobile-nav-item"><a href="index.html" onclick="closeAllDrawers()">Home Page</a></li>
+      <li class="mobile-nav-item"><a href="shop.html" onclick="closeAllDrawers()">All Outfits</a></li>
+      <li class="mobile-nav-item highlight"><a href="shop.html?category=sale999" onclick="closeAllDrawers()" style="color:#E11D48;">🔥 Flat ₹999 Sale</a></li>
+      <li class="mobile-nav-item"><a href="shop.html?category=kurtas" onclick="closeAllDrawers()">Kurtas & Kurtis</a></li>
+      <li class="mobile-nav-item"><a href="shop.html?category=ethnic-sets-dupatta" onclick="closeAllDrawers()">Sets with Dupatta</a></li>
+      <li class="mobile-nav-item"><a href="shop.html?category=ethnic-sets" onclick="closeAllDrawers()">Ethnic Sets</a></li>
+      <li class="mobile-nav-item"><a href="shop.html?category=co-ords" onclick="closeAllDrawers()">Contemporary Co-Ords</a></li>
+      <li class="mobile-nav-item"><a href="shop.html?category=dresses" onclick="closeAllDrawers()">Festive Maxi Dresses</a></li>
+    </ul>
+  </aside>
+
+  <!-- Product Quick View Deep Details Modal -->
+  <div class="modal-backdrop" id="productQuickViewModal" role="dialog" aria-modal="true">
+    <div class="modal-container">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close modal">&times;</button>
+
+      <div class="modal-product-grid">
+        <div class="modal-gallery-pane">
+          <div class="modal-main-image-wrap">
+            <img id="modalMainImage" src="" alt="Vikamour Garment View" />
+          </div>
+          <div class="modal-thumbnails-strip" id="modalThumbnails"></div>
+        </div>
+
+        <div class="modal-details-pane">
+          <span class="modal-kicker" id="modalProductKicker">KURTAS & KURTIS</span>
+          <h2 class="modal-product-title" id="modalProductTitle">Garment Name</h2>
+
+          <div class="modal-rating-row">
+            <span class="star-icon">★★★★★</span>
+            <span style="font-weight:600; font-size:0.78rem;">4.9 Rating (48 reviews)</span>
+          </div>
+
+          <div class="modal-price-box" id="modalPriceBox"></div>
+
+          <div class="modal-option-block">
+            <div class="option-header">
+              <span>Selected Shade: <strong id="modalSelectedColorName">Rani Pink</strong></span>
+            </div>
+            <div class="modal-color-swatches" id="modalColorSwatches"></div>
+          </div>
+
+          <div class="modal-option-block">
+            <div class="option-header">
+              <span>Select Size</span>
+              <button class="size-guide-link" onclick="document.getElementById('sizeGuideModal').classList.add('active')">Fit & Size Guide</button>
+            </div>
+            <div class="modal-size-pills-row" id="modalSizeOptions"></div>
+          </div>
+
+          <div style="margin: 1.5rem 0 1rem;">
+            <button class="btn btn-primary btn-block" id="modalAddToBagBtn">
+              <span>Add To Shopping Bag</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line></svg>
+            </button>
+          </div>
+
+          <div class="modal-tabs-container">
+            <p id="modalProductDesc" style="font-size: 0.82rem; color: var(--color-slate-medium); line-height: 1.5; margin-bottom: 1rem;"></p>
+            <div class="craft-specs-grid">
+              <div class="craft-spec-item">
+                <span class="spec-label">Artisanal Origin</span>
+                <span class="spec-value" id="modalOriginDetail">Jaipur Atelier</span>
+              </div>
+              <div class="craft-spec-item">
+                <span class="spec-label">Pure Fabric</span>
+                <span class="spec-value" id="modalCompositionDetail">100% Combed Cotton</span>
+              </div>
+              <div class="craft-spec-item">
+                <span class="spec-label">Care Instructions</span>
+                <span class="spec-value" id="modalCareDetail">Gentle Hand Wash</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Multi-Step Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal" role="dialog" aria-modal="true">
+    <div class="modal-container checkout-modal-card">
+      <button class="modal-close-btn" id="checkoutCloseBtn" aria-label="Close checkout">&times;</button>
+      
+      <div class="checkout-modal-header">
+        <div class="brand-name" style="font-size: 1.3rem;">VIKAMOUR ATELIER</div>
+        <p style="font-size: 0.78rem; color: var(--color-slate-medium); margin-top: 0.2rem;">Complete Your Order Across India</p>
+
+        <div class="checkout-progress-steps">
+          <div class="checkout-step-tab active" data-step="1">1. Address</div>
+          <div class="checkout-step-tab" data-step="2">2. Delivery</div>
+          <div class="checkout-step-tab" data-step="3">3. Payment</div>
+          <div class="checkout-step-tab" data-step="4">4. Confirmation</div>
+        </div>
+      </div>
+
+      <div class="checkout-modal-body">
+        
+        <!-- Step 1: Address Pane -->
+        <div class="checkout-pane active" data-pane-step="1">
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem;">1. Shipping Address</h4>
+          
+          <div class="form-row two-cols">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" class="form-control" id="checkoutFullName" placeholder="e.g. Pooja Sharma" value="Pooja Sharma" required />
+            </div>
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" class="form-control" id="checkoutEmail" placeholder="pooja.sharma@gmail.com" value="pooja.sharma@gmail.com" required />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label>Street Address & Landmark *</label>
+            <input type="text" class="form-control" id="checkoutAddress" placeholder="Flat 402, Lotus Towers, Vasant Vihar" value="Flat 402, Lotus Towers, Vasant Vihar" required />
+          </div>
+
+          <div class="form-row three-cols">
+            <div class="form-group">
+              <label>City *</label>
+              <input type="text" class="form-control" id="checkoutCity" value="New Delhi" />
+            </div>
+            <div class="form-group">
+              <label>PIN Code *</label>
+              <input type="text" class="form-control" id="checkoutPostal" value="110057" />
+            </div>
+            <div class="form-group">
+              <label>State *</label>
+              <input type="text" class="form-control" id="checkoutState" value="Delhi" />
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+            <button class="btn btn-primary" id="toCheckoutStep2">
+              <span>Continue to Delivery</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 2: Shipping Method Pane -->
+        <div class="checkout-pane" data-pane-step="2">
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem;">2. Select Delivery Courier</h4>
+          
+          <div class="shipping-options-list">
+            <label class="shipping-option-card selected">
+              <div class="shipping-option-info">
+                <input type="radio" name="shippingMethodChoice" value="express" checked />
+                <div>
+                  <strong>Blue Dart Express Tracked</strong>
+                  <p style="font-size: 0.78rem; color: var(--color-slate-medium);">Delivered in 2 - 3 business days with door step verification</p>
+                </div>
+              </div>
+              <strong>FREE</strong>
+            </label>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-top: 1.5rem;">
+            <button class="btn btn-outline" onclick="setCheckoutStep(1)">&larr; Back to Address</button>
+            <button class="btn btn-primary" id="toCheckoutStep3">Continue to Payment &rarr;</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Payment Pane -->
+        <div class="checkout-pane" data-pane-step="3">
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem;">3. Payment Method</h4>
+          <p style="font-size: 0.78rem; color: var(--color-slate-medium); margin-bottom: 1.25rem;">Select your preferred payment gateway. 100% secure.</p>
+
+          <div class="payment-options-grid">
+            <div class="payment-option-card selected">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+              <span>UPI / QR</span>
+            </div>
+            <div class="payment-option-card">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>
+              <span>Cards</span>
+            </div>
+            <div class="payment-option-card">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+              <span>NetBanking</span>
+            </div>
+          </div>
+
+          <div class="checkout-review-box" style="background: var(--color-stone); padding: 1rem; border-radius: 4px; margin-bottom: 1.25rem;">
+            <div id="checkoutOrderReview"></div>
+            <div style="border-top: 1px solid var(--color-border); padding-top: 0.75rem; display: flex; justify-content: space-between; font-weight: 800;">
+              <span>Total Payable</span>
+              <span id="checkoutTotalPreview">₹ 0</span>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: space-between;">
+            <button class="btn btn-outline" onclick="setCheckoutStep(2)">&larr; Back</button>
+            <button class="btn btn-primary" id="placeOrderBtn" style="background-color: var(--color-success); border-color: var(--color-success);">
+              Pay & Confirm Order
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Confirmation Pane -->
+        <div class="checkout-pane" data-pane-step="4">
+          <div class="order-success-screen">
+            <div class="order-success-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            </div>
+            <h3 style="font-size: 1.6rem; font-weight: 800; color: var(--color-noir);">Thank You for Shopping with Vikamour</h3>
+            <p style="font-size: 0.88rem; color: var(--color-slate-medium); margin-top: 0.35rem;">Your celebratory order has been confirmed.</p>
+            <div class="order-id-badge">Order ID: <span id="confirmedOrderId">VK-829140</span></div>
+            <div style="display: flex; justify-content: center; gap: 1rem;">
+              <button class="btn btn-primary" onclick="document.getElementById('checkoutModal').classList.remove('active'); document.body.classList.remove('modal-open'); window.location.href='shop.html';">
+                Continue Shopping
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Size Guide Modal -->
+  <div class="modal-backdrop" id="sizeGuideModal" role="dialog" aria-modal="true">
+    <div class="modal-container" style="max-width: 680px; padding: 2.2rem;">
+      <button class="modal-close-btn" onclick="document.getElementById('sizeGuideModal').classList.remove('active'); document.body.classList.remove('modal-open');" aria-label="Close size guide">&times;</button>
+      
+      <p class="kicker">Vikamour Ethnic Fit</p>
+      <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem;">Size & Measurements Guide</h3>
+      <p style="font-size: 0.82rem; color: var(--color-slate-medium); margin-bottom: 1.5rem;">
+        All Vikamour ethnic garments are tailored for comfortable festive drape. If you are between sizes, we recommend sizing up for kalidar flared silhouettes.
+      </p>
+
+      <table class="size-guide-table">
+        <thead>
+          <tr>
+            <th>Size</th>
+            <th>Bust (inches)</th>
+            <th>Waist (inches)</th>
+            <th>Hip (inches)</th>
+            <th>Kurta Length</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>XS</strong></td>
+            <td>34"</td>
+            <td>28"</td>
+            <td>38"</td>
+            <td>44"</td>
+          </tr>
+          <tr>
+            <td><strong>S</strong></td>
+            <td>36"</td>
+            <td>30"</td>
+            <td>40"</td>
+            <td>45"</td>
+          </tr>
+          <tr>
+            <td><strong>M</strong></td>
+            <td>38"</td>
+            <td>32"</td>
+            <td>42"</td>
+            <td>45"</td>
+          </tr>
+          <tr>
+            <td><strong>L</strong></td>
+            <td>40"</td>
+            <td>34"</td>
+            <td>44"</td>
+            <td>46"</td>
+          </tr>
+          <tr>
+            <td><strong>XL</strong></td>
+            <td>42"</td>
+            <td>36"</td>
+            <td>46"</td>
+            <td>46"</td>
+          </tr>
+          <tr>
+            <td><strong>XXL</strong></td>
+            <td>44"</td>
+            <td>38"</td>
+            <td>48"</td>
+            <td>46"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Floating AI Stylist Pill Button -->
+  <button class="ai-stylist-floating-btn" id="aiStylistTriggerBtn" aria-label="Open AI Stylist">
+    <div class="ai-stylist-icon-badge">✨</div>
+    <span>AI Stylist</span>
+  </button>
+
+  <!-- AI Stylist Interactive Modal -->
+  <div class="modal-backdrop" id="aiStylistModal" role="dialog" aria-modal="true">
+    <div class="modal-container ai-stylist-modal-card">
+      <button class="modal-close-btn" id="aiStylistCloseBtn" aria-label="Close AI Stylist">&times;</button>
+      
+      <span class="stylist-step-pill">✨ Vikamour AI Stylist</span>
+      <h3 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 0.35rem; color: #111111;">Find Your Perfect Ethnic Look</h3>
+      <p style="font-size: 0.82rem; color: var(--color-slate-medium); margin-bottom: 1.25rem;">
+        Answer 3 quick preferences and let our AI curate the ideal ensemble for your festive celebration.
+      </p>
+
+      <div id="aiStylistStepsContainer">
+        <div class="stylist-step-block">
+          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">1. What is the Occasion?</h5>
+          <div class="stylist-option-grid">
+            <button class="stylist-option-btn selected" data-step="1" data-value="festive">
+              <span>🪔</span> Festive Puja & Diwali
+            </button>
+            <button class="stylist-option-btn" data-step="1" data-value="wedding">
+              <span>👑</span> Wedding & Sangeet
+            </button>
+            <button class="stylist-option-btn" data-step="1" data-value="daily">
+              <span>🌸</span> Daily Work & Casuals
+            </button>
+            <button class="stylist-option-btn" data-step="1" data-value="budget">
+              <span>🔥</span> Special Deals Under ₹1000
+            </button>
+          </div>
+        </div>
+
+        <div class="stylist-step-block" style="margin-top: 1.25rem;">
+          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">2. Preferred Silhouette</h5>
+          <div class="stylist-option-grid">
+            <button class="stylist-option-btn selected" data-step="2" data-value="ethnic-sets-dupatta">
+              <span>✨</span> Suit Set with Dupatta
+            </button>
+            <button class="stylist-option-btn" data-step="2" data-value="kurtas">
+              <span>🌿</span> Straight / Flared Kurta
+            </button>
+            <button class="stylist-option-btn" data-step="2" data-value="co-ords">
+              <span>💫</span> Modern Fusion Co-Ord
+            </button>
+            <button class="stylist-option-btn" data-step="2" data-value="dresses">
+              <span>👗</span> Festive Maxi Dress
+            </button>
+          </div>
+        </div>
+
+        <div class="stylist-step-block" style="margin-top: 1.25rem;">
+          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">3. Radiant Festive Shade</h5>
+          <div class="stylist-option-grid">
+            <button class="stylist-option-btn selected" data-step="3" data-value="pink">
+              <span>💖</span> Rani Pink & Fuchsia
+            </button>
+            <button class="stylist-option-btn" data-step="3" data-value="gold">
+              <span>🪙</span> Mustard & Haldi Gold
+            </button>
+            <button class="stylist-option-btn" data-step="3" data-value="blue">
+              <span>💙</span> Royal Teal & Indigo
+            </button>
+            <button class="stylist-option-btn" data-step="3" data-value="maroon">
+              <span>🍷</span> Wine & Ruby Maroon
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stylist-recommendation-box" id="stylistResultBox" style="display: block;">
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <img id="stylistResultImg" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80" alt="Recommended Outfit" style="width: 76px; height: 102px; object-fit: cover; border-radius: 4px;" />
+          <div style="flex: 1;">
+            <span style="font-size: 0.72rem; font-weight: 700; color: #B45309; text-transform: uppercase; letter-spacing: 0.06em;">Stylist Match 98%</span>
+            <h4 id="stylistResultTitle" style="font-size: 0.98rem; font-weight: 700; margin: 0.2rem 0; color: #111111;">Rani Pink Zardozi Kurta Set with Organza Dupatta</h4>
+            <p id="stylistResultDesc" style="font-size: 0.76rem; color: #4B5563; margin-bottom: 0.4rem;">Handcrafted in rich chanderi silk with gota patti borders.</p>
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <strong id="stylistResultPrice" style="font-size: 1.15rem; color: #B45309; font-weight: 800;">₹ 3,499</strong>
+              <button class="btn btn-primary" id="stylistApplyBtn" style="padding: 0.5rem 1.1rem; font-size: 0.78rem;">
+                Filter & View &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="site-container">
+      
+      <div class="footer-main-grid">
+        <div class="footer-brand">
+          <h3>VIKAMOUR</h3>
+          <p>
+            Handcrafted Indian festive apparel celebrating heritage handblock craft, zardozi embroidery, and regal silhouettes across Rajasthan, Gujarat, and Uttar Pradesh.
+          </p>
+          <div class="footer-social-links">
+            <a href="#" class="social-circle-link" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="#" class="social-circle-link" aria-label="Pinterest">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Festive Lines</h4>
+          <ul class="footer-links-list">
+            <li><a href="shop.html?category=sale999">🔥 Flat ₹999 Deals</a></li>
+            <li><a href="shop.html?category=kurtas">Kurtas & Kurtis</a></li>
+            <li><a href="shop.html?category=ethnic-sets-dupatta">Sets with Dupatta</a></li>
+            <li><a href="shop.html?category=ethnic-sets">Ethnic Sets (Kurta+Pant)</a></li>
+            <li><a href="shop.html?category=co-ords">Contemporary Co-Ords</a></li>
+            <li><a href="shop.html?category=dresses">Festive Maxi Dresses</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Client Care</h4>
+          <ul class="footer-links-list">
+            <li><a href="javascript:void(0)" onclick="document.getElementById('sizeGuideModal').classList.add('active'); document.body.classList.add('modal-open');">Size & Fit Guide</a></li>
+            <li><a href="javascript:void(0)" onclick="document.getElementById('cartTriggerBtn').click();">Track Order</a></li>
+            <li><a href="javascript:void(0)">15-Day Easy Returns</a></li>
+            <li><a href="javascript:void(0)">Artisanal Handloom Care</a></li>
+            <li><a href="javascript:void(0)">Contact Concierge</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-col-title">Atelier Boutiques</h4>
+          <ul class="footer-links-list">
+            <li><span>The Chanakya, Chanakyapuri, New Delhi</span></li>
+            <li><span>Palladium, Lower Parel, Mumbai</span></li>
+            <li><span>Indiranagar 100ft Road, Bengaluru</span></li>
+            <li><span>Banjara Hills, Hyderabad</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-row">
+        <div>
+          &copy; 2026 VIKAMOUR ATELIER PRIVATE LIMITED. All rights reserved.
+        </div>
+        
+        <div class="payment-methods-strip">
+          <span class="payment-badge">UPI</span>
+          <span class="payment-badge">VISA</span>
+          <span class="payment-badge">MASTERCARD</span>
+          <span class="payment-badge">RUPAY</span>
+          <span class="payment-badge">NETBANKING</span>
+        </div>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="products.js"></script>
+  <script src="shop.js"></script>
+</body>
+</html>
