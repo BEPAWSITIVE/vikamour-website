@@ -5,6 +5,44 @@
  * Active Filter Chips, Quick View Modal, Cart Drawer, Wishlist, and Checkout.
  */
 
+// -----------------------------------------------------------------------------
+// Security Utilities (XSS Prevention & LocalStorage Guarding)
+// -----------------------------------------------------------------------------
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function safeGetArray(key) {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return [];
+    const parsed = JSON.parse(item);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn(`[Security] Failed to parse localStorage key "${key}":`, e);
+    return [];
+  }
+}
+
+function safeGetCurrency() {
+  try {
+    const cur = localStorage.getItem('vikamour_currency');
+    const ALLOWED = ['INR', 'USD', 'EUR', 'GBP'];
+    if (cur && typeof cur === 'string' && ALLOWED.includes(cur.toUpperCase())) {
+      return cur.toUpperCase();
+    }
+    return 'INR';
+  } catch (e) {
+    return 'INR';
+  }
+}
+
 // Global Shop State
 const shopState = {
   products: [...VIKAMOUR_PRODUCTS],
@@ -23,9 +61,9 @@ const shopState = {
     sortBy: 'featured',
     gridCols: 3
   },
-  currency: localStorage.getItem('vikamour_currency') || 'INR',
-  cart: JSON.parse(localStorage.getItem('vikamour_cart')) || [],
-  wishlist: JSON.parse(localStorage.getItem('vikamour_wishlist')) || [],
+  currency: safeGetCurrency(),
+  cart: safeGetArray('vikamour_cart'),
+  wishlist: safeGetArray('vikamour_wishlist'),
   promoCode: null,
   activeModalProduct: null,
   modalSelectedSize: null,
@@ -89,43 +127,48 @@ function parseUrlFilters() {
 
   // Category (e.g. ?category=sale999, kurtas, dresses)
   const cat = params.get('category');
-  if (cat) {
-    shopState.filters.category = cat;
+  if (cat && typeof cat === 'string') {
+    shopState.filters.category = cat.slice(0, 50).trim();
   }
 
   // Search query
   const q = params.get('search');
-  if (q) {
-    shopState.filters.searchQuery = q.toLowerCase();
+  if (q && typeof q === 'string') {
+    const cleanQ = q.slice(0, 100).trim();
+    shopState.filters.searchQuery = cleanQ.toLowerCase();
     const searchInput = document.getElementById('shopSearchInput');
     if (searchInput) {
-      searchInput.value = q;
-      document.getElementById('shopSearchClear').classList.add('visible');
+      searchInput.value = cleanQ;
+      const clearBtn = document.getElementById('shopSearchClear');
+      if (clearBtn) clearBtn.classList.add('visible');
     }
   }
 
   // Fabric
   const fabric = params.get('fabric');
-  if (fabric) {
-    shopState.filters.fabrics = [fabric];
+  if (fabric && typeof fabric === 'string') {
+    shopState.filters.fabrics = [fabric.slice(0, 50).trim()];
   }
 
   // Occasion
   const occasion = params.get('occasion');
-  if (occasion) {
-    shopState.filters.occasions = [occasion];
+  if (occasion && typeof occasion === 'string') {
+    shopState.filters.occasions = [occasion.slice(0, 50).trim()];
   }
 
   // Shade / Color
   const color = params.get('color');
-  if (color) {
-    shopState.filters.colors = [color.toLowerCase()];
+  if (color && typeof color === 'string') {
+    shopState.filters.colors = [color.slice(0, 50).trim().toLowerCase()];
   }
 
   // Max Price
   const maxP = params.get('maxPrice');
   if (maxP) {
-    shopState.filters.priceMax = Number(maxP);
+    const parsedPrice = Number(maxP);
+    if (!isNaN(parsedPrice) && parsedPrice >= 0 && parsedPrice <= 500000) {
+      shopState.filters.priceMax = parsedPrice;
+    }
   }
 }
 
@@ -691,7 +734,7 @@ function renderActiveFilterChips() {
 
   container.innerHTML = chips.map((c, i) => `
     <span class="shop-chip-tag">
-      ${c.label}
+      ${escapeHTML(c.label)}
       <button class="shop-chip-remove-btn" data-chip-idx="${i}" title="Remove filter">&times;</button>
     </span>
   `).join('') + `
@@ -898,22 +941,27 @@ function quickAddToCart(productId) {
 }
 
 function addToCart(product, size, color, quantity = 1) {
+  if (!product || !product.id) return;
+  const safeQty = Math.min(99, Math.max(1, parseInt(quantity, 10) || 1));
+  const safeSize = String(size || 'M');
+  const safeColor = (color && typeof color === 'object') ? color : { name: 'Default', hex: '#000000' };
+
   const existingIdx = shopState.cart.findIndex(item => 
-    item.productId === product.id && item.size === size && item.color.name === color.name
+    item.productId === product.id && item.size === safeSize && item.color.name === safeColor.name
   );
 
   if (existingIdx > -1) {
-    shopState.cart[existingIdx].quantity += quantity;
+    shopState.cart[existingIdx].quantity = Math.min(99, shopState.cart[existingIdx].quantity + safeQty);
   } else {
     shopState.cart.push({
-      cartItemId: `${product.id}-${size}-${color.name}-${Date.now()}`,
+      cartItemId: `${product.id}-${safeSize}-${safeColor.name}-${Date.now()}`,
       productId: product.id,
-      name: product.name,
-      price: product.price,
-      size: size,
-      color: color,
-      image: product.images[0],
-      quantity: quantity
+      name: String(product.name || ''),
+      price: Number(product.price) || 0,
+      size: safeSize,
+      color: safeColor,
+      image: String(product.images ? product.images[0] : ''),
+      quantity: safeQty
     });
   }
 
@@ -927,10 +975,13 @@ function updateCartItemQuantity(cartItemId, delta) {
   const item = shopState.cart.find(i => i.cartItemId === cartItemId);
   if (!item) return;
 
-  item.quantity += delta;
+  const step = parseInt(delta, 10) || 0;
+  item.quantity += step;
   if (item.quantity <= 0) {
     shopState.cart = shopState.cart.filter(i => i.cartItemId !== cartItemId);
     showToast(`Removed from bag`, 'info');
+  } else if (item.quantity > 99) {
+    item.quantity = 99;
   }
 
   saveCart();
@@ -947,11 +998,15 @@ function removeCartItem(cartItemId) {
 }
 
 function saveCart() {
-  localStorage.setItem('vikamour_cart', JSON.stringify(shopState.cart));
+  try {
+    localStorage.setItem('vikamour_cart', JSON.stringify(shopState.cart));
+  } catch (e) {
+    console.warn('[Security] Failed to save cart to localStorage:', e);
+  }
 }
 
 function updateCartCounters() {
-  const count = shopState.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const count = shopState.cart.reduce((sum, item) => sum + (parseInt(item.quantity, 10) || 0), 0);
   const badge = document.getElementById('cartBadgeCount');
   if (badge) {
     badge.textContent = count;
@@ -985,33 +1040,38 @@ function renderCart() {
   if (emptyState) emptyState.style.display = 'none';
   if (footer) footer.style.display = 'block';
 
-  // Render items
-  container.innerHTML = shopState.cart.map(item => `
+  // Render items safely with HTML escaping
+  container.innerHTML = shopState.cart.map(item => {
+    const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+    const safePrice = Number(item.price) || 0;
+    const safeColorName = (item.color && item.color.name) ? item.color.name : '';
+    return `
     <div class="cart-item-card">
       <div class="cart-item-thumb">
-        <img src="${item.image}" alt="${item.name}" />
+        <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" />
       </div>
       <div class="cart-item-details">
         <div class="cart-item-header">
-          <h4 class="cart-item-title">${item.name}</h4>
-          <button class="cart-item-remove-btn" onclick="removeCartItem('${item.cartItemId}')" title="Remove">&times;</button>
+          <h4 class="cart-item-title">${escapeHTML(item.name)}</h4>
+          <button class="cart-item-remove-btn" onclick="removeCartItem('${escapeHTML(item.cartItemId)}')" title="Remove">&times;</button>
         </div>
         <div class="cart-item-meta">
-          <span>Size: ${item.size}</span>
+          <span>Size: ${escapeHTML(item.size)}</span>
           <span>•</span>
-          <span>Shade: ${item.color.name}</span>
+          <span>Shade: ${escapeHTML(safeColorName)}</span>
         </div>
         <div class="cart-item-bottom">
           <div class="qty-stepper">
-            <button class="qty-btn" onclick="updateCartItemQuantity('${item.cartItemId}', -1)">&minus;</button>
-            <span class="qty-num">${item.quantity}</span>
-            <button class="qty-btn" onclick="updateCartItemQuantity('${item.cartItemId}', 1)">&plus;</button>
+            <button class="qty-btn" onclick="updateCartItemQuantity('${escapeHTML(item.cartItemId)}', -1)">&minus;</button>
+            <span class="qty-num">${safeQty}</span>
+            <button class="qty-btn" onclick="updateCartItemQuantity('${escapeHTML(item.cartItemId)}', 1)">&plus;</button>
           </div>
-          <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+          <div class="cart-item-price">${formatPrice(safePrice * safeQty)}</div>
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // Calculations
   const rawSubtotal = shopState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -1087,7 +1147,11 @@ function toggleWishlist(productId) {
 }
 
 function saveWishlist() {
-  localStorage.setItem('vikamour_wishlist', JSON.stringify(shopState.wishlist));
+  try {
+    localStorage.setItem('vikamour_wishlist', JSON.stringify(shopState.wishlist));
+  } catch (e) {
+    console.warn('[Security] Failed to save wishlist to localStorage:', e);
+  }
 }
 
 function updateWishlistCounters() {
@@ -1114,20 +1178,20 @@ function renderWishlist() {
   const items = shopState.products.filter(p => shopState.wishlist.includes(p.id));
   container.innerHTML = items.map(product => `
     <div class="cart-item-card">
-      <div class="cart-item-thumb" onclick="openProductModal('${product.id}')">
-        <img src="${product.images[0]}" alt="${product.name}" />
+      <div class="cart-item-thumb" onclick="openProductModal('${escapeHTML(product.id)}')">
+        <img src="${escapeHTML(product.images ? product.images[0] : '')}" alt="${escapeHTML(product.name)}" />
       </div>
       <div class="cart-item-details">
         <div class="cart-item-header">
-          <h4 class="cart-item-title">${product.name}</h4>
-          <button class="cart-item-remove-btn" onclick="toggleWishlist('${product.id}')" title="Remove">&times;</button>
+          <h4 class="cart-item-title">${escapeHTML(product.name)}</h4>
+          <button class="cart-item-remove-btn" onclick="toggleWishlist('${escapeHTML(product.id)}')" title="Remove">&times;</button>
         </div>
         <div class="cart-item-meta">
-          <span>${product.fabricLabel}</span>
+          <span>${escapeHTML(product.fabricLabel || '')}</span>
         </div>
         <div class="cart-item-bottom">
           <div class="cart-item-price">${formatPrice(product.price)}</div>
-          <button class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.75rem;" onclick="quickAddToCart('${product.id}')">
+          <button class="btn btn-outline" style="padding:0.35rem 0.75rem; font-size:0.75rem;" onclick="quickAddToCart('${escapeHTML(product.id)}')">
             Move to Bag
           </button>
         </div>
@@ -1439,7 +1503,7 @@ function updateCheckoutSummaryPreviews() {
   const totalPreview = document.getElementById('checkoutTotalPreview');
   if (!previewContainer) return;
 
-  const rawSubtotal = shopState.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const rawSubtotal = shopState.cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1)), 0);
   let discountAmount = 0;
   if (shopState.promoCode) {
     if (shopState.promoCode.type === 'percent') discountAmount = rawSubtotal * (shopState.promoCode.value / 100);
@@ -1450,12 +1514,16 @@ function updateCheckoutSummaryPreviews() {
   const taxableAmount = Math.max(0, rawSubtotal - discountAmount);
   const grandTotal = taxableAmount + shipping + (taxableAmount * 0.12);
 
-  previewContainer.innerHTML = shopState.cart.map(item => `
+  previewContainer.innerHTML = shopState.cart.map(item => {
+    const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+    const safePrice = Number(item.price) || 0;
+    return `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.8rem;">
-      <span>${item.quantity}x ${item.name} (${item.size})</span>
-      <strong>${formatPrice(item.price * item.quantity)}</strong>
+      <span>${safeQty}x ${escapeHTML(item.name)} (${escapeHTML(item.size)})</span>
+      <strong>${formatPrice(safePrice * safeQty)}</strong>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   if (totalPreview) totalPreview.textContent = formatPrice(grandTotal);
 }
@@ -1492,7 +1560,10 @@ function showToast(message, type = 'info') {
     iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
   }
 
-  toast.innerHTML = `${iconSvg} <span>${message}</span>`;
+  toast.innerHTML = iconSvg;
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = String(message || '');
+  toast.appendChild(msgSpan);
   container.appendChild(toast);
 
   requestAnimationFrame(() => toast.classList.add('show'));

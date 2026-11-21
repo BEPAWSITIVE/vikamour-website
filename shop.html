@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; frame-ancestors 'self';" />
   <title>Shop Ethnic & Festive Collection | VIKAMOUR Atelier</title>
   <meta name="description" content="Explore Vikamour's complete Indian ethnic wear collection: handcrafted Kurtas, Anarkali Sets with Dupatta, Co-Ords, and Flat ₹999 deals with precision filters." />
   
@@ -1114,11 +1117,11 @@
         <div>
           <h4 class="footer-col-title">Client Care</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" onclick="document.getElementById('sizeGuideModal').classList.add('active'); document.body.classList.add('modal-open');">Size & Fit Guide</a></li>
-            <li><a href="javascript:void(0)" onclick="document.getElementById('cartTriggerBtn').click();">Track Order</a></li>
-            <li><a href="javascript:void(0)">15-Day Easy Returns</a></li>
-            <li><a href="javascript:void(0)">Artisanal Handloom Care</a></li>
-            <li><a href="javascript:void(0)">Contact Concierge</a></li>
+            <li><a href="#sizeGuideModal" onclick="event.preventDefault(); document.getElementById('sizeGuideModal').classList.add('active'); document.body.classList.add('modal-open');">Size & Fit Guide</a></li>
+            <li><a href="#cartDrawer" onclick="event.preventDefault(); document.getElementById('cartTriggerBtn').click();">Track Order</a></li>
+            <li><a href="#!">15-Day Easy Returns</a></li>
+            <li><a href="#!">Artisanal Handloom Care</a></li>
+            <li><a href="#!">Contact Concierge</a></li>
           </ul>
         </div>
 

@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; frame-ancestors 'self';" />
   <title>VIKAMOUR | Luxury Fashion Atelier</title>
   <meta name="description" content="Vikamour Atelier offers timeless luxury clothing, tailored silhouettes, and sustainable organic fabrics handcrafted for modern elegance." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -566,12 +569,12 @@
         <div>
           <h4 class="footer-col-title">Client Care</h4>
           <ul class="footer-links-list">
-            <li><a href="javascript:void(0)" onclick="document.getElementById('sizeGuideModal').classList.add('active')">Size & Fit Guide</a></li>
-            <li><a href="javascript:void(0)" onclick="openCartDrawer()">Order Tracking</a></li>
-            <li><a href="javascript:void(0)">Complimentary Returns</a></li>
-            <li><a href="javascript:void(0)">Garment Care Guide</a></li>
-            <li><a href="javascript:void(0)">Atelier Repairs & Reconditioning</a></li>
-            <li><a href="javascript:void(0)">Contact Concierge</a></li>
+            <li><a href="#sizeGuideModal" onclick="event.preventDefault(); document.getElementById('sizeGuideModal').classList.add('active');">Size & Fit Guide</a></li>
+            <li><a href="#cartDrawer" onclick="event.preventDefault(); openCartDrawer();">Order Tracking</a></li>
+            <li><a href="#!">Complimentary Returns</a></li>
+            <li><a href="#!">Garment Care Guide</a></li>
+            <li><a href="#!">Atelier Repairs & Reconditioning</a></li>
+            <li><a href="#!">Contact Concierge</a></li>
           </ul>
         </div>
 

@@ -4,10 +4,51 @@
  * checkout multi-step flow, currency conversion, and local storage persistence.
  */
 
+// -----------------------------------------------------------------------------
+// Security Utilities (XSS Prevention & LocalStorage Guarding)
+// -----------------------------------------------------------------------------
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function safeGetArray(key) {
+  try {
+    const item = localStorage.getItem(key);
+    if (!item) return [];
+    const parsed = JSON.parse(item);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn(`[Security] Failed to parse localStorage key "${key}":`, e);
+    return [];
+  }
+}
+
+function safeGetCurrency() {
+  try {
+    const cur = localStorage.getItem('vikamour_currency');
+    const ALLOWED = ['INR', 'USD', 'EUR', 'GBP'];
+    if (cur && typeof cur === 'string' && ALLOWED.includes(cur.toUpperCase())) {
+      return cur.toUpperCase();
+    }
+    return 'INR';
+  } catch (e) {
+    return 'INR';
+  }
+}
+
 // Application State
-const savedCurrency = localStorage.getItem('vikamour_currency');
-const initialCurrency = (savedCurrency && savedCurrency !== 'USD') ? savedCurrency : 'INR';
-localStorage.setItem('vikamour_currency', initialCurrency);
+const initialCurrency = safeGetCurrency();
+try {
+  localStorage.setItem('vikamour_currency', initialCurrency);
+} catch (e) {
+  console.warn('[Security] localStorage setItem failed:', e);
+}
 
 const state = {
   products: [...VIKAMOUR_PRODUCTS],
@@ -23,8 +64,8 @@ const state = {
     gridCols: 3
   },
   currency: initialCurrency,
-  cart: JSON.parse(localStorage.getItem('vikamour_cart')) || [],
-  wishlist: JSON.parse(localStorage.getItem('vikamour_wishlist')) || [],
+  cart: safeGetArray('vikamour_cart'),
+  wishlist: safeGetArray('vikamour_wishlist'),
   promoCode: null,
   activeModalProduct: null,
   modalSelectedSize: null,
@@ -457,7 +498,7 @@ function renderActiveFilterChips() {
 
   container.innerHTML = chips.map((c, i) => `
     <span class="active-filter-tag">
-      ${c.label}
+      ${escapeHTML(c.label)}
       <button data-chip-idx="${i}" title="Remove filter">&times;</button>
     </span>
   `).join('') + `
@@ -756,22 +797,27 @@ function renderModalDetails(product) {
 // Cart System (Slide-Over Drawer & State)
 // -----------------------------------------------------------------------------
 function addToCart(product, size, color, quantity = 1) {
+  if (!product || !product.id) return;
+  const safeQty = Math.min(99, Math.max(1, parseInt(quantity, 10) || 1));
+  const safeSize = String(size || 'M');
+  const safeColor = (color && typeof color === 'object') ? color : { name: 'Default', hex: '#000000' };
+
   const existingIdx = state.cart.findIndex(item => 
-    item.productId === product.id && item.size === size && item.color.name === color.name
+    item.productId === product.id && item.size === safeSize && item.color.name === safeColor.name
   );
 
   if (existingIdx > -1) {
-    state.cart[existingIdx].quantity += quantity;
+    state.cart[existingIdx].quantity = Math.min(99, state.cart[existingIdx].quantity + safeQty);
   } else {
     state.cart.push({
-      cartItemId: `${product.id}-${size}-${color.name}-${Date.now()}`,
+      cartItemId: `${product.id}-${safeSize}-${safeColor.name}-${Date.now()}`,
       productId: product.id,
-      name: product.name,
-      price: product.price,
-      size: size,
-      color: color,
-      image: product.images[0],
-      quantity: quantity
+      name: String(product.name || ''),
+      price: Number(product.price) || 0,
+      size: safeSize,
+      color: safeColor,
+      image: String(product.images ? product.images[0] : ''),
+      quantity: safeQty
     });
   }
 
@@ -785,10 +831,13 @@ function updateCartItemQuantity(cartItemId, delta) {
   const item = state.cart.find(i => i.cartItemId === cartItemId);
   if (!item) return;
 
-  item.quantity += delta;
+  const step = parseInt(delta, 10) || 0;
+  item.quantity += step;
   if (item.quantity <= 0) {
     state.cart = state.cart.filter(i => i.cartItemId !== cartItemId);
     showToast(`Removed from bag`, 'info');
+  } else if (item.quantity > 99) {
+    item.quantity = 99;
   }
 
   saveCart();
@@ -805,11 +854,15 @@ function removeCartItem(cartItemId) {
 }
 
 function saveCart() {
-  localStorage.setItem('vikamour_cart', JSON.stringify(state.cart));
+  try {
+    localStorage.setItem('vikamour_cart', JSON.stringify(state.cart));
+  } catch (e) {
+    console.warn('[Security] Failed to save cart to localStorage:', e);
+  }
 }
 
 function updateCartCounters() {
-  const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const count = state.cart.reduce((sum, item) => sum + (parseInt(item.quantity, 10) || 0), 0);
   const badge = document.getElementById('cartBadgeCount');
   const subtotalBtnVal = document.getElementById('cartSubtotalValue');
 
@@ -820,7 +873,7 @@ function updateCartCounters() {
   }
 
   if (subtotalBtnVal) {
-    const rawSubtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const rawSubtotal = state.cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1)), 0);
     subtotalBtnVal.textContent = formatPrice(rawSubtotal);
   }
 }
@@ -850,29 +903,34 @@ function renderCart() {
   if (emptyState) emptyState.style.display = 'none';
   if (footer) footer.style.display = 'block';
 
-  // Render items
-  container.innerHTML = state.cart.map(item => `
+  // Render items safely with HTML escaping
+  container.innerHTML = state.cart.map(item => {
+    const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+    const safePrice = Number(item.price) || 0;
+    const safeColorName = (item.color && item.color.name) ? item.color.name : '';
+    return `
     <div class="cart-item-card">
       <div class="cart-item-thumb">
-        <img src="${item.image}" alt="${item.name}" />
+        <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}" />
       </div>
       <div class="cart-item-info">
-        <h4 class="cart-item-title">${item.name}</h4>
+        <h4 class="cart-item-title">${escapeHTML(item.name)}</h4>
         <div class="cart-item-variants">
-          Size: <strong>${item.size}</strong> • Color: <strong>${item.color.name}</strong>
+          Size: <strong>${escapeHTML(item.size)}</strong> • Color: <strong>${escapeHTML(safeColorName)}</strong>
         </div>
-        <div class="cart-item-price">${formatPrice(item.price * item.quantity)}</div>
+        <div class="cart-item-price">${formatPrice(safePrice * safeQty)}</div>
         <div class="cart-item-actions-row">
           <div class="quantity-stepper">
-            <button class="stepper-btn" onclick="updateCartItemQuantity('${item.cartItemId}', -1)">-</button>
-            <span class="stepper-value">${item.quantity}</span>
-            <button class="stepper-btn" onclick="updateCartItemQuantity('${item.cartItemId}', 1)">+</button>
+            <button class="stepper-btn" onclick="updateCartItemQuantity('${escapeHTML(item.cartItemId)}', -1)">-</button>
+            <span class="stepper-value">${safeQty}</span>
+            <button class="stepper-btn" onclick="updateCartItemQuantity('${escapeHTML(item.cartItemId)}', 1)">+</button>
           </div>
-          <button class="item-remove-btn" onclick="removeCartItem('${item.cartItemId}')">Remove</button>
+          <button class="item-remove-btn" onclick="removeCartItem('${escapeHTML(item.cartItemId)}')">Remove</button>
         </div>
       </div>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   // Calculations
   const rawSubtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
@@ -948,7 +1006,11 @@ function toggleWishlist(productId) {
     showToast(`Saved to Wishlist: ${product ? product.name : 'Piece'}`, 'success');
   }
 
-  localStorage.setItem('vikamour_wishlist', JSON.stringify(state.wishlist));
+  try {
+    localStorage.setItem('vikamour_wishlist', JSON.stringify(state.wishlist));
+  } catch (e) {
+    console.warn('[Security] Failed to save wishlist to localStorage:', e);
+  }
   updateWishlistCounters();
   renderProducts();
   renderWishlist();
@@ -981,17 +1043,17 @@ function renderWishlist() {
   container.innerHTML = wishlistedProducts.map(item => `
     <div class="cart-item-card">
       <div class="cart-item-thumb">
-        <img src="${item.images[0]}" alt="${item.name}" />
+        <img src="${escapeHTML(item.images ? item.images[0] : '')}" alt="${escapeHTML(item.name)}" />
       </div>
       <div class="cart-item-info">
-        <h4 class="cart-item-title">${item.name}</h4>
-        <div class="cart-item-variants">${item.category.toUpperCase()} • ${item.gender.toUpperCase()}</div>
+        <h4 class="cart-item-title">${escapeHTML(item.name)}</h4>
+        <div class="cart-item-variants">${escapeHTML(String(item.category || '').toUpperCase())} • ${escapeHTML(String(item.gender || '').toUpperCase())}</div>
         <div class="cart-item-price">${formatPrice(item.price)}</div>
         <div class="cart-item-actions-row">
-          <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.72rem;" onclick="moveWishlistToCart('${item.id}')">
+          <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.72rem;" onclick="moveWishlistToCart('${escapeHTML(item.id)}')">
             Move to Bag
           </button>
-          <button class="item-remove-btn" onclick="toggleWishlist('${item.id}')">Remove</button>
+          <button class="item-remove-btn" onclick="toggleWishlist('${escapeHTML(item.id)}')">Remove</button>
         </div>
       </div>
     </div>
@@ -1281,7 +1343,7 @@ function updateCheckoutSummaryPreviews() {
   const totalPreview = document.getElementById('checkoutTotalPreview');
   if (!previewContainer) return;
 
-  const rawSubtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const rawSubtotal = state.cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1)), 0);
   let discountAmount = 0;
   if (state.promoCode) {
     if (state.promoCode.type === 'percent') discountAmount = rawSubtotal * (state.promoCode.value / 100);
@@ -1292,12 +1354,16 @@ function updateCheckoutSummaryPreviews() {
   const taxableAmount = Math.max(0, rawSubtotal - discountAmount);
   const grandTotal = taxableAmount + shipping + (taxableAmount * 0.12);
 
-  previewContainer.innerHTML = state.cart.map(item => `
+  previewContainer.innerHTML = state.cart.map(item => {
+    const safeQty = Math.max(1, parseInt(item.quantity, 10) || 1);
+    const safePrice = Number(item.price) || 0;
+    return `
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; font-size: 0.8rem;">
-      <span>${item.quantity}x ${item.name} (${item.size})</span>
-      <strong>${formatPrice(item.price * item.quantity)}</strong>
+      <span>${safeQty}x ${escapeHTML(item.name)} (${escapeHTML(item.size)})</span>
+      <strong>${formatPrice(safePrice * safeQty)}</strong>
     </div>
-  `).join('');
+  `;
+  }).join('');
 
   if (totalPreview) {
     totalPreview.textContent = formatPrice(grandTotal);
@@ -1357,7 +1423,10 @@ function showToast(message, type = 'info') {
     iconSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
   }
 
-  toast.innerHTML = `${iconSvg} <span>${message}</span>`;
+  toast.innerHTML = iconSvg;
+  const msgSpan = document.createElement('span');
+  msgSpan.textContent = String(message || '');
+  toast.appendChild(msgSpan);
   container.appendChild(toast);
 
   // Trigger animation
