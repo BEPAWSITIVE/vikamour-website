@@ -24,3 +24,7 @@ package-lock.json
 
 # Test Artifacts
 screenshot-*.png
+
+# Local Secrets & Credentials (Protected from Git)
+*.local.js
+.env

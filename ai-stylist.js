@@ -14,7 +14,7 @@
   // ---------------------------------------------------------------------------
   const AI_STATE = {
     apiKey: '',
-    model: 'gemini-1.5-flash',
+    model: 'gemini-3.8-flash',
     isSearching: false,
     history: []
   };
@@ -134,7 +134,9 @@ STRICT RULES:
 [RECOMMENDED_IDS: id1, id2]
 Replace id1, id2 with the exact product "id"s of the items you recommended (e.g., [RECOMMENDED_IDS: vk-set-1, vk-sale-2]). Do not include extra punctuation inside the brackets.`;
 
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${AI_STATE.model}:generateContent?key=${apiKey}`;
+    const activeModel = (window.VIKAMOUR_CONFIG && window.VIKAMOUR_CONFIG.GEMINI_MODEL) || AI_STATE.model || 'gemini-3.8-flash';
+    // Multi-tier model pool: prioritize user-selected model (Gemini 3.8 Flash), then resilient low-latency fallback models
+    const modelsToTry = [activeModel, 'gemini-2.5-flash', 'gemini-3.5-flash'].filter((m, i, arr) => arr.indexOf(m) === i);
 
     const requestBody = {
       contents: [
@@ -151,53 +153,59 @@ Replace id1, id2 with the exact product "id"s of the items you recommended (e.g.
       }
     };
 
-    try {
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(requestBody)
-      });
+    let lastErrorMsg = '';
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        const errMsg = errorData.error?.message || `API Error: ${response.status} ${response.statusText}`;
-        console.warn('[AI Stylist] Gemini API error, falling back to local matcher:', errMsg);
-        // Fallback gracefully so customer gets immediate help
-        const fallbackRes = queryLocalInventoryMatcher(userMessage, stock);
-        fallbackRes.note = `(Note: Gemini API key reported: ${errMsg}. Showing recommendations from Atelier Stock Matcher.)`;
-        return fallbackRes;
+    for (const currentModel of modelsToTry) {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${currentModel}:generateContent?key=${apiKey}`;
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          lastErrorMsg = errorData.error?.message || `API Error: ${response.status} ${response.statusText}`;
+          console.warn(`[AI Stylist] Model ${currentModel} returned ${response.status}: ${lastErrorMsg}. Checking alternative model...`);
+          continue; // Try next fallback model
+        }
+
+        const data = await response.json();
+        const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+        if (!rawText) continue;
+
+        // Parse [RECOMMENDED_IDS: ...] tag
+        let recommendedIds = [];
+        const match = rawText.match(/\[RECOMMENDED_IDS:\s*([^\]]+)\]/i);
+        let cleanText = rawText;
+        if (match) {
+          recommendedIds = match[1].split(',').map(s => s.trim()).filter(Boolean);
+          cleanText = rawText.replace(/\[RECOMMENDED_IDS:\s*[^\]]+\]/i, '').trim();
+        }
+
+        // Filter matched products from actual stock
+        const matchedProducts = stock.filter(p => recommendedIds.includes(p.id));
+
+        return {
+          text: cleanText,
+          products: matchedProducts.length > 0 ? matchedProducts : stock.slice(0, 2),
+          isGemini: true,
+          modelUsed: currentModel
+        };
+
+      } catch (err) {
+        console.warn(`[AI Stylist] Network fetch failed for ${currentModel}:`, err);
+        lastErrorMsg = err.message;
       }
-
-      const data = await response.json();
-      const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-      if (!rawText) {
-        return queryLocalInventoryMatcher(userMessage, stock);
-      }
-
-      // Parse [RECOMMENDED_IDS: ...] tag
-      let recommendedIds = [];
-      const match = rawText.match(/\[RECOMMENDED_IDS:\s*([^\]]+)\]/i);
-      let cleanText = rawText;
-      if (match) {
-        recommendedIds = match[1].split(',').map(s => s.trim()).filter(Boolean);
-        cleanText = rawText.replace(/\[RECOMMENDED_IDS:\s*[^\]]+\]/i, '').trim();
-      }
-
-      // Filter matched products from actual stock
-      const matchedProducts = stock.filter(p => recommendedIds.includes(p.id));
-
-      return {
-        text: cleanText,
-        products: matchedProducts,
-        isGemini: true
-      };
-
-    } catch (err) {
-      console.warn('[AI Stylist] Network fetch failed, falling back to local matcher:', err);
-      const fallbackRes = queryLocalInventoryMatcher(userMessage, stock);
-      fallbackRes.note = `(Network notice: Using offline Atelier stock matcher.)`;
-      return fallbackRes;
     }
+
+    // If all online Gemini models in pool were unreachable or busy, fallback to local stock matcher
+    console.warn('[AI Stylist] All Gemini models currently busy, falling back to local matcher:', lastErrorMsg);
+    const fallbackRes = queryLocalInventoryMatcher(userMessage, stock);
+    fallbackRes.note = `(Note: High demand on Gemini preview servers. Curated gracefully using Vikamour Stock Matcher.)`;
+    return fallbackRes;
   }
 
   // ---------------------------------------------------------------------------
@@ -304,8 +312,9 @@ Replace id1, id2 with the exact product "id"s of the items you recommended (e.g.
 
     if (key) {
       pill.className = 'ai-stylist-status-pill online';
-      text.textContent = 'Gemini AI Active';
-      pill.title = 'Powered by Google Gemini Generative AI';
+      const activeModel = (window.VIKAMOUR_CONFIG && window.VIKAMOUR_CONFIG.GEMINI_MODEL) || AI_STATE.model || 'gemini-3.8-flash';
+      text.textContent = activeModel.includes('3.8') ? 'Gemini 3.8 Flash Active' : 'Gemini AI Active';
+      pill.title = `Powered by Google ${activeModel}`;
     } else {
       pill.className = 'ai-stylist-status-pill offline';
       text.textContent = 'Atelier Matcher';

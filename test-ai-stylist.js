@@ -17,6 +17,8 @@ async function runAiStylistTest() {
 
   try {
     const page = await browser.newPage();
+    page.on('console', msg => console.log('  [Browser]', msg.text()));
+    page.on('pageerror', err => console.log('  [Browser Error]', err.message));
     await page.setViewport({ width: 1280, height: 800 });
 
     const htmlPath = path.resolve(__dirname, 'index.html');
@@ -59,7 +61,11 @@ async function runAiStylistTest() {
       return null;
     });
     console.log(`  🔍 Clicked suggestion chip: "${chipQuery}"`);
-    await new Promise(r => setTimeout(r, 800));
+    // Wait for live Gemini API response
+    await page.waitForFunction(() => {
+      const thread = document.getElementById('aiChatThread');
+      return thread && thread.querySelectorAll('.stylist-row').length >= 2;
+    }, { timeout: 15000 });
 
     // 5. Verify user query and recommendations in chat thread
     const chatState = await page.evaluate(() => {
@@ -97,7 +103,10 @@ async function runAiStylistTest() {
     console.log('  🔍 Testing custom input submission: "Show me Flat ₹999 cotton kurtas"');
     await page.type('#aiStylistInput', 'Show me Flat ₹999 cotton kurtas');
     await page.keyboard.press('Enter');
-    await new Promise(r => setTimeout(r, 800));
+    await page.waitForFunction(() => {
+      const thread = document.getElementById('aiChatThread');
+      return thread && thread.querySelectorAll('.stylist-row').length >= 3;
+    }, { timeout: 15000 });
 
     const secondQueryCheck = await page.evaluate(() => {
       const thread = document.getElementById('aiChatThread');
@@ -122,7 +131,7 @@ async function runAiStylistTest() {
     console.log('  ✅ Gemini API Key configuration panel toggled open');
 
     // 8. Test entering API Key
-    await page.type('#geminiApiKeyInput', 'AIzaSyDemoKeyTestOnly123456');
+    await page.type('#geminiApiKeyInput', 'test-demo-gemini-key');
     await page.click('#saveGeminiApiKeyBtn');
     await new Promise(r => setTimeout(r, 400));
 
@@ -172,7 +181,10 @@ async function runAiStylistTest() {
       const chip = document.querySelector('.ai-chip-btn');
       if (chip) chip.click();
     });
-    await new Promise(r => setTimeout(r, 800));
+    await page.waitForFunction(() => {
+      const thread = document.getElementById('aiChatThread');
+      return thread && thread.querySelectorAll('.stylist-row').length >= 2;
+    }, { timeout: 15000 });
 
     const shopChatCards = await page.evaluate(() => {
       return document.querySelectorAll('#aiChatThread .chat-product-card').length;

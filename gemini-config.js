@@ -1,13 +1,14 @@
 /**
  * VIKAMOUR Atelier - Google Gemini AI Stylist Configuration
  * -----------------------------------------------------------------------------
- * You can provide your Google Gemini API Key here or enter it directly via the
- * Stylist Settings (gear icon) in the AI Stylist chat window.
+ * Model configured: Gemini 3.8 Flash (gemini-3.8-flash)
  * 
- * Get your Gemini API Key from Google AI Studio: https://aistudio.google.com/
+ * Your API key can be entered via:
+ * 1. The Stylist Settings panel (gear icon) in the chat window (stored in localStorage)
+ * 2. Or placed locally in `gemini-key.local.js` (gitignored for security)
  */
 window.VIKAMOUR_CONFIG = window.VIKAMOUR_CONFIG || {};
 
-// Set your Gemini API key here, or leave empty to configure through the website UI:
-window.VIKAMOUR_CONFIG.GEMINI_API_KEY = "";
-window.VIKAMOUR_CONFIG.GEMINI_MODEL = "gemini-1.5-flash";
+// Set default Gemini model to 3.8 Flash
+window.VIKAMOUR_CONFIG.GEMINI_MODEL = "gemini-3.8-flash";
+window.VIKAMOUR_CONFIG.GEMINI_API_KEY = window.VIKAMOUR_CONFIG.GEMINI_API_KEY || "";
