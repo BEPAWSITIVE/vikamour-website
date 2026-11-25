@@ -125,7 +125,24 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDrawersAndModals();
   setupCheckoutFlow();
   setupNewsletter();
+  initSupabaseCatalogSync();
 });
+
+async function initSupabaseCatalogSync() {
+  if (!window.VikamourSupabase) return;
+  try {
+    const res = await window.VikamourSupabase.fetchProducts();
+    if (res && res.data && res.data.length > 0 && res.source === 'supabase') {
+      state.products = res.data;
+      state.filteredProducts = [...res.data];
+      applyFilters();
+      renderProducts();
+      console.log(`✨ [Vikamour] Catalog synchronized with Supabase (${res.data.length} items)`);
+    }
+  } catch (err) {
+    console.warn('[Vikamour] Supabase catalog sync notice:', err);
+  }
+}
 
 // -----------------------------------------------------------------------------
 // Header & Navigation Handlers
@@ -1370,10 +1387,53 @@ function updateCheckoutSummaryPreviews() {
   }
 }
 
-function completeOrder() {
-  const orderId = `VK-${Math.floor(100000 + Math.random() * 900000)}`;
+async function completeOrder() {
+  const rawSubtotal = state.cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1)), 0);
+  let discountAmount = 0;
+  if (state.promoCode) {
+    if (state.promoCode.type === 'percent') discountAmount = rawSubtotal * (state.promoCode.value / 100);
+    else if (state.promoCode.type === 'flat') discountAmount = state.promoCode.value;
+  }
+  const isFree = rawSubtotal >= 1499;
+  const shipping = isFree ? 0 : 99;
+  const taxableAmount = Math.max(0, rawSubtotal - discountAmount);
+  const tax = taxableAmount * 0.12;
+  const grandTotal = taxableAmount + shipping + tax;
+
+  const currentCart = [...state.cart];
+  const orderPayload = {
+    customerName: state.checkoutData.fullName || document.getElementById('checkoutFullName')?.value.trim() || 'Atelier Client',
+    customerEmail: state.checkoutData.email || document.getElementById('checkoutEmail')?.value.trim() || 'client@vikamour.com',
+    shippingAddress: state.checkoutData.address || document.getElementById('checkoutAddress')?.value.trim() || 'Address on file',
+    city: state.checkoutData.city || document.getElementById('checkoutCity')?.value.trim() || 'New Delhi',
+    postalCode: state.checkoutData.postalCode || document.getElementById('checkoutPostalCode')?.value.trim() || '110001',
+    country: state.checkoutData.country || 'India',
+    shippingMethod: state.checkoutData.shippingMethod || 'standard',
+    paymentMethod: state.checkoutData.paymentMethod || 'card',
+    subtotal: rawSubtotal,
+    discount: discountAmount,
+    promoCode: state.promoCode ? state.promoCode.label : null,
+    shippingFee: shipping,
+    tax: tax,
+    totalAmount: grandTotal,
+    currency: state.currency
+  };
+
+  // Place order with Supabase Cloud backend
+  let orderNumber = `VK-${Math.floor(100000 + Math.random() * 900000)}`;
+  if (window.VikamourSupabase) {
+    try {
+      const res = await window.VikamourSupabase.createOrder(orderPayload, currentCart);
+      if (res && res.orderNumber) {
+        orderNumber = res.orderNumber;
+      }
+    } catch (err) {
+      console.warn('[Vikamour] Supabase order saving notice:', err);
+    }
+  }
+
   const orderIdElem = document.getElementById('confirmedOrderId');
-  if (orderIdElem) orderIdElem.textContent = orderId;
+  if (orderIdElem) orderIdElem.textContent = orderNumber;
 
   // Switch to success celebration step
   setCheckoutStep(4);
@@ -1384,7 +1444,7 @@ function completeOrder() {
   updateCartCounters();
   renderCart();
 
-  showToast(`Order ${orderId} confirmed with compliments!`, 'success');
+  showToast(`Order ${orderNumber} confirmed with compliments!`, 'success');
 }
 
 // -----------------------------------------------------------------------------
@@ -1393,11 +1453,17 @@ function completeOrder() {
 function setupNewsletter() {
   const form = document.getElementById('newsletterForm');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = form.querySelector('input[type="email"]');
       if (input && input.value) {
-        showToast('Welcome to the Vikamour Atelier Club! Code VIKA10 has been unlocked.', 'success');
+        const email = input.value.trim();
+        if (window.VikamourSupabase) {
+          const res = await window.VikamourSupabase.subscribeNewsletter(email, 'homepage_footer');
+          showToast(res.message || 'Welcome to the Vikamour Atelier Club! Code VIKA10 has been unlocked.', res.success ? 'success' : 'info');
+        } else {
+          showToast('Welcome to the Vikamour Atelier Club! Code VIKA10 has been unlocked.', 'success');
+        }
         input.value = '';
       }
     });

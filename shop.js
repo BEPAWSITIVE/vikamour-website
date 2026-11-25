@@ -117,7 +117,23 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDrawersAndModals();
   setupCheckoutFlow();
   setupAiStylistShop();
+  initSupabaseShopSync();
 });
+
+async function initSupabaseShopSync() {
+  if (!window.VikamourSupabase) return;
+  try {
+    const res = await window.VikamourSupabase.fetchProducts();
+    if (res && res.data && res.data.length > 0 && res.source === 'supabase') {
+      shopState.products = res.data;
+      shopState.filteredProducts = [...res.data];
+      applyFilters();
+      console.log(`✨ [Vikamour Shop] Catalog synchronized with Supabase (${res.data.length} items)`);
+    }
+  } catch (err) {
+    console.warn('[Vikamour Shop] Supabase catalog sync notice:', err);
+  }
+}
 
 // -----------------------------------------------------------------------------
 // URL Query Parameter Parsing
@@ -1528,8 +1544,51 @@ function updateCheckoutSummaryPreviews() {
   if (totalPreview) totalPreview.textContent = formatPrice(grandTotal);
 }
 
-function completeOrder() {
-  const orderId = `VK-${Math.floor(100000 + Math.random() * 900000)}`;
+async function completeOrder() {
+  const rawSubtotal = shopState.cart.reduce((sum, item) => sum + ((Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1)), 0);
+  let discountAmount = 0;
+  if (shopState.promoCode) {
+    if (shopState.promoCode.type === 'percent') discountAmount = rawSubtotal * (shopState.promoCode.value / 100);
+    else if (shopState.promoCode.type === 'flat') discountAmount = shopState.promoCode.value;
+  }
+  const isFree = rawSubtotal >= 1499;
+  const shipping = isFree ? 0 : 99;
+  const taxableAmount = Math.max(0, rawSubtotal - discountAmount);
+  const tax = taxableAmount * 0.12;
+  const grandTotal = taxableAmount + shipping + tax;
+
+  const currentCart = [...shopState.cart];
+  const orderPayload = {
+    customerName: document.getElementById('checkoutFullName')?.value.trim() || 'Atelier Client',
+    customerEmail: document.getElementById('checkoutEmail')?.value.trim() || 'client@vikamour.com',
+    customerPhone: document.getElementById('checkoutPhone')?.value.trim() || null,
+    shippingAddress: document.getElementById('checkoutAddress')?.value.trim() || 'Address on file',
+    city: document.getElementById('checkoutCity')?.value.trim() || 'New Delhi',
+    postalCode: document.getElementById('checkoutPostalCode')?.value.trim() || '110001',
+    country: 'India',
+    shippingMethod: 'standard',
+    paymentMethod: 'card',
+    subtotal: rawSubtotal,
+    discount: discountAmount,
+    promoCode: shopState.promoCode ? shopState.promoCode.label : null,
+    shippingFee: shipping,
+    tax: tax,
+    totalAmount: grandTotal,
+    currency: shopState.currency
+  };
+
+  let orderId = `VK-${Math.floor(100000 + Math.random() * 900000)}`;
+  if (window.VikamourSupabase) {
+    try {
+      const res = await window.VikamourSupabase.createOrder(orderPayload, currentCart);
+      if (res && res.orderNumber) {
+        orderId = res.orderNumber;
+      }
+    } catch (err) {
+      console.warn('[Vikamour Shop] Supabase order error:', err);
+    }
+  }
+
   const orderIdElem = document.getElementById('confirmedOrderId');
   if (orderIdElem) orderIdElem.textContent = orderId;
 

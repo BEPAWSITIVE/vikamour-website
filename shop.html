@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com; connect-src 'self'; frame-ancestors 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'self';" />
   <title>Shop Ethnic & Festive Collection | VIKAMOUR Atelier</title>
   <meta name="description" content="Explore Vikamour's complete Indian ethnic wear collection: handcrafted Kurtas, Anarkali Sets with Dupatta, Co-Ords, and Flat ₹999 deals with precision filters." />
   
@@ -61,7 +61,7 @@
       <!-- Utility Cluster -->
       <div class="header-actions">
         <!-- User Profile Icon -->
-        <button class="action-btn" aria-label="User Account" title="My Account">
+        <button class="action-btn" aria-label="User Account" title="My Account" id="accountTriggerBtn">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -1118,7 +1118,7 @@
           <h4 class="footer-col-title">Client Care</h4>
           <ul class="footer-links-list">
             <li><a href="#sizeGuideModal" onclick="event.preventDefault(); document.getElementById('sizeGuideModal').classList.add('active'); document.body.classList.add('modal-open');">Size & Fit Guide</a></li>
-            <li><a href="#cartDrawer" onclick="event.preventDefault(); document.getElementById('cartTriggerBtn').click();">Track Order</a></li>
+            <li><a href="#trackOrder" onclick="event.preventDefault(); openOrderTrackingModal();">Track Order</a></li>
             <li><a href="#!">15-Day Easy Returns</a></li>
             <li><a href="#!">Artisanal Handloom Care</a></li>
             <li><a href="#!">Contact Concierge</a></li>
@@ -1152,6 +1152,130 @@
 
     </div>
   </footer>
+
+  <!-- Atelier Account & Supabase Integration Modal -->
+  <div class="modal-backdrop" id="accountModal" role="dialog" aria-modal="true" aria-labelledby="accountModalTitle">
+    <div class="account-modal-container">
+      <button class="modal-close-btn" id="accountModalCloseBtn" aria-label="Close modal">&times;</button>
+      
+      <div class="account-modal-header">
+        <h3 class="account-modal-title" id="accountModalTitle">Vikamour Atelier Account</h3>
+        <p class="account-modal-subtitle" id="accountModalSubtitle">Member Privileges & Supabase Cloud Connection</p>
+      </div>
+
+      <!-- Account Modal Navigation Tabs -->
+      <div class="account-tabs" id="accountTabsContainer" role="tablist">
+        <button class="account-tab-btn active" data-account-tab="signIn">Sign In</button>
+        <button class="account-tab-btn" data-account-tab="signUp">Register</button>
+        <button class="account-tab-btn" data-account-tab="trackOrder">Track Order</button>
+        <button class="account-tab-btn" data-account-tab="supabaseConfig">Supabase Cloud</button>
+      </div>
+
+      <!-- Tab 1: Sign In -->
+      <div class="account-pane active" id="paneSignIn">
+        <form id="signInForm" onsubmit="event.preventDefault(); handleCustomerSignIn();">
+          <div class="account-form-group">
+            <label class="account-form-label" for="signInEmail">Email Address</label>
+            <input type="email" id="signInEmail" class="account-form-input" placeholder="e.g. client@vikamour.com" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="signInPassword">Password</label>
+            <input type="password" id="signInPassword" class="account-form-input" placeholder="Your account password" required />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem;">
+            Sign In to Atelier &rarr;
+          </button>
+        </form>
+      </div>
+
+      <!-- Tab 2: Register -->
+      <div class="account-pane" id="paneSignUp">
+        <form id="signUpForm" onsubmit="event.preventDefault(); handleCustomerSignUp();">
+          <div class="account-form-group">
+            <label class="account-form-label" for="signUpName">Full Name</label>
+            <input type="text" id="signUpName" class="account-form-input" placeholder="e.g. Priya Sharma" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="signUpEmail">Email Address</label>
+            <input type="email" id="signUpEmail" class="account-form-input" placeholder="e.g. priya@example.com" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="signUpPassword">Create Password</label>
+            <input type="password" id="signUpPassword" class="account-form-input" placeholder="Minimum 6 characters" minlength="6" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="signUpPhone">Phone (Optional)</label>
+            <input type="tel" id="signUpPhone" class="account-form-input" placeholder="+91 98765 43210" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem;">
+            Create Member Account &rarr;
+          </button>
+        </form>
+      </div>
+
+      <!-- Tab 3: Track Order -->
+      <div class="account-pane" id="paneTrackOrder">
+        <form id="trackOrderForm" onsubmit="event.preventDefault(); handleTrackOrder();">
+          <div class="account-form-group">
+            <label class="account-form-label" for="trackOrderNumber">Order Number</label>
+            <input type="text" id="trackOrderNumber" class="account-form-input" placeholder="e.g. VK-728192" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="trackEmail">Email Address (Optional)</label>
+            <input type="email" id="trackEmail" class="account-form-input" placeholder="client@example.com" />
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 0.5rem; padding: 0.8rem;">
+            Track Order Status &rarr;
+          </button>
+        </form>
+        <div id="trackOrderResult" style="margin-top: 1rem; display: none;"></div>
+      </div>
+
+      <!-- Tab 4: Supabase Connection Configuration -->
+      <div class="account-pane" id="paneSupabaseConfig">
+        <div id="supabaseStatusDisplay" style="margin-bottom: 1rem;"></div>
+        <form id="supabaseConfigForm" onsubmit="event.preventDefault(); handleSaveSupabaseConfig();">
+          <div class="account-form-group">
+            <label class="account-form-label" for="supabaseUrlInput">Supabase Project URL</label>
+            <input type="url" id="supabaseUrlInput" class="account-form-input" placeholder="https://your-project-id.supabase.co" required />
+          </div>
+          <div class="account-form-group">
+            <label class="account-form-label" for="supabaseKeyInput">Supabase Anon / Public Key</label>
+            <input type="password" id="supabaseKeyInput" class="account-form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." required />
+          </div>
+          <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+            <button type="submit" class="btn btn-primary" style="flex: 1; padding: 0.75rem;">
+              Connect & Test Backend &rarr;
+            </button>
+            <button type="button" class="btn btn-outline" onclick="handleClearSupabaseConfig();" style="padding: 0.75rem;">
+              Reset
+            </button>
+          </div>
+        </form>
+        <div style="margin-top: 1.25rem; font-size: 0.76rem; color: var(--color-muted); line-height: 1.5; border-top: 1px dashed var(--color-border); padding-top: 0.75rem;">
+          <strong>Quick Setup:</strong> Run the provided <code>supabase-schema.sql</code> in your Supabase SQL Editor to automatically create tables (<code>products</code>, <code>orders</code>, <code>order_items</code>, <code>profiles</code>, <code>newsletter_subscribers</code>) and seed the catalog!
+        </div>
+      </div>
+
+      <!-- Signed In State Pane -->
+      <div class="account-pane" id="paneUserProfile" style="display: none;">
+        <div style="background: var(--color-stone); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1rem;">
+          <div style="font-size: 0.72rem; text-transform: uppercase; font-weight: 700; color: var(--color-gold);">Verified Atelier Client</div>
+          <h4 id="userProfileName" style="font-size: 1.05rem; font-weight: 700; margin: 0.25rem 0;">Client Name</h4>
+          <p id="userProfileEmail" style="font-size: 0.8rem; color: var(--color-muted); margin: 0;">client@example.com</p>
+        </div>
+        <div id="userOrdersList" style="max-height: 200px; overflow-y: auto; margin-bottom: 1rem;"></div>
+        <button type="button" class="btn btn-outline" style="width: 100%; padding: 0.7rem;" onclick="handleCustomerSignOut();">
+          Sign Out of Account
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Supabase Cloud Backend & Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
 
   <!-- Scripts -->
   <script src="products.js"></script>

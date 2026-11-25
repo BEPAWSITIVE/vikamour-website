@@ -52,6 +52,41 @@ Repository: [https://github.com/BEPAWSITIVE/vikamour-website](https://github.com
 - **Product Quick View Modal**: High-res multi-angle image gallery with thumbnail switcher, color swatches, size selection, stock countdown, and fabric care specs.
 - **4-Step Checkout Flow**: Delivery address, express courier selection, secure payment gateway (UPI/Cards/NetBanking), and order confirmation celebration with generated Order ID.
 
+### 6. ⚡ Supabase Cloud Database & Authentication
+- **Live Cloud Database Integration**: Connects with PostgreSQL via Supabase for real-time e-commerce operations.
+- **Database Schema & Migrations (`supabase-schema.sql`)**:
+  - `products`: Dynamic catalog with JSONB colors, sizes, images, stock, and pricing.
+  - `orders`: Real-time order capture with customer details, shipping address, totals, and statuses.
+  - `order_items`: Line items for each placed order linked via foreign keys.
+  - `profiles`: Registered customer accounts linked with `auth.users` via PostgreSQL triggers.
+  - `newsletter_subscribers`: Cloud capture of newsletter and VIP club sign-ups.
+- **Row Level Security (RLS)**: Enforced across all tables for data protection.
+- **Member Account Modal**:
+  - Customer Sign In & Registration powered by Supabase Auth.
+  - Order Tracking & Order History query tool.
+  - In-browser Supabase credentials setup & live connection testing.
+- **Graceful Fallback Mode**: The entire website operates smoothly in local offline mode even before Supabase credentials are configured.
+
+---
+
+## ⚡ Connecting to Supabase (3 Simple Steps)
+
+### Step 1: Create a Supabase Project
+1. Go to [https://supabase.com](https://supabase.com) and create a free project.
+2. In the left navigation, click on **SQL Editor** -> **New Query**.
+3. Open `supabase-schema.sql` from this repository, copy its contents, paste them into the SQL Editor, and click **Run**.
+   *(This automatically creates all 5 tables, sets up Row Level Security, configures the user profile trigger, and seeds all 17 Vikamour ethnic wear products!)*
+
+### Step 2: Get Your API Credentials
+In your Supabase project dashboard, navigate to **Project Settings** -> **API**:
+- Copy your **Project URL** (e.g. `https://your-project-id.supabase.co`)
+- Copy your **Project API anon / public key** (e.g. `eyJhbGciOi...`)
+
+### Step 3: Connect Your Website
+You can connect in either of two ways:
+- **Option A (In-Browser UI)**: Click the **User Account icon** in the top navigation header, switch to the **Supabase Cloud** tab, paste your URL and Anon Key, and click **Connect & Test Backend**.
+- **Option B (Code Configuration)**: Open `supabase-client.js` and paste your URL and key into `DEFAULT_SUPABASE_URL` and `DEFAULT_SUPABASE_ANON_KEY`.
+
 ---
 
 ## 🚀 How to Run Locally
@@ -60,7 +95,7 @@ Repository: [https://github.com/BEPAWSITIVE/vikamour-website](https://github.com
 ```powershell
 python server.py --open
 ```
-Starts the local development server at `http://localhost:8000` and opens default browser.
+Starts the secure local development server at `http://localhost:8000` with Content Security Policy (CSP) headers configured for Supabase.
 
 ### Method 2: Direct File Launch
 Double click `index.html` or `shop.html` in your file explorer to view in any modern browser.
@@ -72,13 +107,15 @@ Double click `index.html` or `shop.html` in your file explorer to view in any mo
 ```
 vikamour-website/
 │
-├── index.html       # Home page with header, festive hero banner, lookbook, and drawers
-├── shop.html        # Dedicated shop page with sticky filter sidebar and collection grid
-├── styles.css       # Unified design system, CSS variables, typography, and responsive rules
-├── products.js      # Curated Indian ethnic wear dataset (INR base rate), reviews, currencies
-├── app.js           # Home page interactive logic, cart, wishlist, and modal management
-├── shop.js          # Dedicated shop page filtering engine, URL parsing, and state manager
-├── server.py        # Lightweight development server script
-├── .gitignore       # Git ignore rules
-└── README.md        # Project documentation
+├── index.html            # Home page with header, festive hero banner, lookbook, and drawers
+├── shop.html             # Dedicated shop page with sticky filter sidebar and collection grid
+├── styles.css            # Unified design system, CSS variables, typography, and responsive rules
+├── products.js           # Curated Indian ethnic wear dataset (INR base rate), reviews, currencies
+├── supabase-client.js    # Supabase JavaScript client, database APIs, auth, and account modal controller
+├── supabase-schema.sql   # Complete PostgreSQL schema, RLS policies, trigger, and seed data
+├── app.js                # Home page interactive logic, cart, wishlist, and modal management
+├── shop.js               # Dedicated shop page filtering engine, URL parsing, and state manager
+├── server.py             # Hardened local development server with CSP security headers
+├── .gitignore            # Git ignore rules
+└── README.md             # Project documentation
 ```
