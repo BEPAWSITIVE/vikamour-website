@@ -13,8 +13,8 @@
 // You can find them in your Supabase Dashboard: Project Settings -> API.
 // Alternatively, you can store them in localStorage under 'vikamour_supabase_url' and 'vikamour_supabase_key'.
 
-const DEFAULT_SUPABASE_URL = 'YOUR_SUPABASE_PROJECT_URL'; // e.g. https://xyzcompany.supabase.co
-const DEFAULT_SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // e.g. eyJhbGciOi...
+const DEFAULT_SUPABASE_URL = 'https://jgxyqqmvltrwsszmvujv.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpneHlxcW12bHRyd3Nzem12dWp2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTU2MDY1MTIsImV4cCI6MjExMTE4MjUxMn0.ik80BKreY1SxZQUyQLpXYUiAgVgiMysU48eGTekGoD0';
 
 const SUPABASE_CONFIG = {
   url: localStorage.getItem('vikamour_supabase_url') || DEFAULT_SUPABASE_URL,
