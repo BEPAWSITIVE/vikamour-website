@@ -77,7 +77,7 @@ class SecureHandler(http.server.SimpleHTTPRequestHandler):
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
             "font-src 'self' https://fonts.gstatic.com; "
             "img-src 'self' data: https://images.unsplash.com https://*.supabase.co; "
-            "connect-src 'self' https://*.supabase.co wss://*.supabase.co; "
+            "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com; "
             "frame-ancestors 'self'; "
             "base-uri 'self'; "
             "form-action 'self';"

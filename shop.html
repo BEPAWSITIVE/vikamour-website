@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'self';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://generativelanguage.googleapis.com; frame-ancestors 'self';" />
   <title>Shop Ethnic & Festive Collection | VIKAMOUR Atelier</title>
   <meta name="description" content="Explore Vikamour's complete Indian ethnic wear collection: handcrafted Kurtas, Anarkali Sets with Dupatta, Co-Ords, and Flat ₹999 deals with precision filters." />
   
@@ -1014,89 +1014,116 @@
     <span>AI Stylist</span>
   </button>
 
-  <!-- AI Stylist Interactive Modal -->
-  <div class="modal-backdrop" id="aiStylistModal" role="dialog" aria-modal="true">
-    <div class="modal-container ai-stylist-modal-card">
-      <button class="modal-close-btn" id="aiStylistCloseBtn" aria-label="Close AI Stylist">&times;</button>
+  <!-- AI Stylist Interactive Modal (Conversational Chatbot) -->
+  <div class="modal-backdrop" id="aiStylistModal" role="dialog" aria-modal="true" aria-labelledby="aiStylistModalTitle">
+    <div class="modal-container ai-stylist-chat-modal">
       
-      <span class="stylist-step-pill">✨ Vikamour AI Stylist</span>
-      <h3 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 0.35rem; color: #111111;">Find Your Perfect Ethnic Look</h3>
-      <p style="font-size: 0.82rem; color: var(--color-slate-medium); margin-bottom: 1.25rem;">
-        Answer 3 quick preferences and let our AI curate the ideal ensemble for your festive celebration.
-      </p>
-
-      <div id="aiStylistStepsContainer">
-        <div class="stylist-step-block">
-          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">1. What is the Occasion?</h5>
-          <div class="stylist-option-grid">
-            <button class="stylist-option-btn selected" data-step="1" data-value="festive">
-              <span>🪔</span> Festive Puja & Diwali
-            </button>
-            <button class="stylist-option-btn" data-step="1" data-value="wedding">
-              <span>👑</span> Wedding & Sangeet
-            </button>
-            <button class="stylist-option-btn" data-step="1" data-value="daily">
-              <span>🌸</span> Daily Work & Casuals
-            </button>
-            <button class="stylist-option-btn" data-step="1" data-value="budget">
-              <span>🔥</span> Special Deals Under ₹1000
-            </button>
+      <!-- Stylist Header -->
+      <div class="ai-stylist-header">
+        <div class="ai-stylist-header-info">
+          <div class="ai-stylist-avatar-wrap">
+            <span class="ai-stylist-avatar">✨</span>
+            <span class="ai-stylist-pulse"></span>
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <h3 class="ai-stylist-title" id="aiStylistModalTitle">Vikamour AI Stylist</h3>
+              <span class="ai-stylist-status-pill online" id="aiStylistStatusPill" title="AI Stylist Status">
+                <span class="status-dot"></span>
+                <span id="aiStylistStatusText">Atelier Matcher</span>
+              </span>
+            </div>
+            <p class="ai-stylist-subtitle">Handcrafted Royal Styling & Live Stock Search</p>
           </div>
         </div>
 
-        <div class="stylist-step-block" style="margin-top: 1.25rem;">
-          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">2. Preferred Silhouette</h5>
-          <div class="stylist-option-grid">
-            <button class="stylist-option-btn selected" data-step="2" data-value="ethnic-sets-dupatta">
-              <span>✨</span> Suit Set with Dupatta
-            </button>
-            <button class="stylist-option-btn" data-step="2" data-value="kurtas">
-              <span>🌿</span> Straight / Flared Kurta
-            </button>
-            <button class="stylist-option-btn" data-step="2" data-value="co-ords">
-              <span>💫</span> Modern Fusion Co-Ord
-            </button>
-            <button class="stylist-option-btn" data-step="2" data-value="dresses">
-              <span>👗</span> Festive Maxi Dress
-            </button>
-          </div>
-        </div>
-
-        <div class="stylist-step-block" style="margin-top: 1.25rem;">
-          <h5 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-slate-dark);">3. Radiant Festive Shade</h5>
-          <div class="stylist-option-grid">
-            <button class="stylist-option-btn selected" data-step="3" data-value="pink">
-              <span>💖</span> Rani Pink & Fuchsia
-            </button>
-            <button class="stylist-option-btn" data-step="3" data-value="gold">
-              <span>🪙</span> Mustard & Haldi Gold
-            </button>
-            <button class="stylist-option-btn" data-step="3" data-value="blue">
-              <span>💙</span> Royal Teal & Indigo
-            </button>
-            <button class="stylist-option-btn" data-step="3" data-value="maroon">
-              <span>🍷</span> Wine & Ruby Maroon
-            </button>
-          </div>
+        <div class="ai-stylist-header-actions">
+          <button type="button" class="ai-stylist-action-btn" id="aiStylistConfigBtn" aria-label="Gemini API Key Settings" title="Configure Gemini API Key">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+          <button type="button" class="modal-close-btn" id="aiStylistCloseBtn" aria-label="Close AI Stylist">&times;</button>
         </div>
       </div>
 
-      <div class="stylist-recommendation-box" id="stylistResultBox" style="display: block;">
-        <div style="display: flex; gap: 1rem; align-items: center;">
-          <img id="stylistResultImg" src="https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=300&q=80" alt="Recommended Outfit" style="width: 76px; height: 102px; object-fit: cover; border-radius: 4px;" />
-          <div style="flex: 1;">
-            <span style="font-size: 0.72rem; font-weight: 700; color: #B45309; text-transform: uppercase; letter-spacing: 0.06em;">Stylist Match 98%</span>
-            <h4 id="stylistResultTitle" style="font-size: 0.98rem; font-weight: 700; margin: 0.2rem 0; color: #111111;">Rani Pink Zardozi Kurta Set with Organza Dupatta</h4>
-            <p id="stylistResultDesc" style="font-size: 0.76rem; color: #4B5563; margin-bottom: 0.4rem;">Handcrafted in rich chanderi silk with gota patti borders.</p>
-            <div style="display: flex; align-items: center; justify-content: space-between;">
-              <strong id="stylistResultPrice" style="font-size: 1.15rem; color: #B45309; font-weight: 800;">₹ 3,499</strong>
-              <button class="btn btn-primary" id="stylistApplyBtn" style="padding: 0.5rem 1.1rem; font-size: 0.78rem;">
-                Filter & View &rarr;
-              </button>
+      <!-- Settings / API Key Panel (Collapsible) -->
+      <div class="ai-stylist-api-panel" id="aiStylistApiPanel" style="display: none;">
+        <div class="api-panel-header">
+          <div>
+            <h4 class="api-panel-title">Google Gemini AI Configuration</h4>
+            <p class="api-panel-desc">Enter your Google Gemini API key to activate generative conversational reasoning directly connected to boutique stock.</p>
+          </div>
+          <button type="button" class="api-panel-close" id="aiStylistApiPanelClose" aria-label="Close settings">&times;</button>
+        </div>
+        <div class="api-panel-body">
+          <div class="api-input-group">
+            <input type="password" id="geminiApiKeyInput" class="api-key-input" placeholder="Paste your AI Studio Gemini API key (AIza...)" autocomplete="off" />
+            <div class="api-btn-row">
+              <button type="button" class="btn btn-primary btn-sm" id="saveGeminiApiKeyBtn">Activate Gemini Key</button>
+              <button type="button" class="btn btn-outline btn-sm" id="clearGeminiApiKeyBtn">Reset to Default</button>
             </div>
           </div>
+          <div id="geminiApiKeyStatus" class="api-key-status"></div>
+          <p class="api-key-help">
+            Keys are safely stored locally in your browser. Alternatively, configure <code>window.VIKAMOUR_CONFIG.GEMINI_API_KEY</code> in <code>gemini-config.js</code>. Get a free key at <a href="https://aistudio.google.com/" target="_blank" rel="noopener">Google AI Studio</a>.
+          </p>
         </div>
       </div>
+
+      <!-- Chat Body & Thread -->
+      <div class="ai-stylist-chat-body" id="aiStylistChatBody">
+        <div class="ai-chat-thread" id="aiChatThread">
+          <!-- Messages dynamically appended by ai-stylist.js -->
+        </div>
+
+        <!-- Typing Indicator -->
+        <div class="ai-typing-indicator" id="aiTypingIndicator" style="display: none;">
+          <div class="ai-avatar-circle small">✨</div>
+          <div class="typing-bubble">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+          </div>
+          <span class="typing-label">Searching boutique stock & curating silhouettes...</span>
+        </div>
+      </div>
+
+      <!-- Quick Prompt Suggestions Chips -->
+      <div class="ai-stylist-quick-chips" id="aiStylistQuickChips">
+        <span class="quick-chip-label">Suggestions:</span>
+        <button type="button" class="ai-chip-btn" data-query="Sister's Sangeet outfit in rani pink under ₹3,500">
+          <span>💖</span> Sangeet in Pink
+        </button>
+        <button type="button" class="ai-chip-btn" data-query="Flat ₹999 cotton daily wear kurtas">
+          <span>🔥</span> Flat ₹999 Kurtas
+        </button>
+        <button type="button" class="ai-chip-btn" data-query="Regal wedding suit set with dupatta in gold or mustard">
+          <span>👑</span> Wedding Gold Set
+        </button>
+        <button type="button" class="ai-chip-btn" data-query="Diwali puja pure chanderi silk attire">
+          <span>🪔</span> Diwali Silk Outfit
+        </button>
+      </div>
+
+      <!-- Chat Input Form -->
+      <form class="ai-stylist-input-bar" id="aiStylistForm" autocomplete="off">
+        <input 
+          type="text" 
+          id="aiStylistInput" 
+          class="ai-stylist-input" 
+          placeholder="Ask for an occasion, color, fabric, or budget (e.g. Sangeet outfit under ₹3,500)..." 
+          aria-label="Stylist prompt input"
+          required 
+        />
+        <button type="submit" class="ai-stylist-send-btn" id="aiStylistSendBtn" aria-label="Send to AI Stylist">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </form>
 
     </div>
   </div>
@@ -1300,7 +1327,9 @@
   <script src="supabase-client.js"></script>
 
   <!-- Scripts -->
+  <script src="gemini-config.js"></script>
   <script src="products.js"></script>
+  <script src="ai-stylist.js" defer></script>
   <script src="shop.js"></script>
 </body>
 </html>

@@ -52,7 +52,16 @@ Repository: [https://github.com/BEPAWSITIVE/vikamour-website](https://github.com
 - **Product Quick View Modal**: High-res multi-angle image gallery with thumbnail switcher, color swatches, size selection, stock countdown, and fabric care specs.
 - **4-Step Checkout Flow**: Delivery address, express courier selection, secure payment gateway (UPI/Cards/NetBanking), and order confirmation celebration with generated Order ID.
 
-### 6. ⚡ Supabase Cloud Database & Authentication
+### 6. ✨ Google Gemini Conversational AI Stylist & Live Stock Search
+- **Conversational Natural Language Interface**: Customers type their styling or event requirements in natural language (e.g. *"Sister's Sangeet outfit in rani pink under ₹3,500"*, *"Pure cotton daily wear kurtas under ₹1,000"*).
+- **Live Stock Search & Reasoning**: Connected directly to the boutique inventory (Supabase cloud database or curated catalog), reasoning about fabric drape, event color resonance, and silhouette pairings.
+- **Embedded Interactive Product Cards**: Recommends 1 to 3 items with direct **Quick View** and **Add to Bag** actions inside the chat thread.
+- **Google Gemini API Support**: Uses `gemini-1.5-flash` with dual configuration options:
+  - **In-App Settings Panel**: Click the gear icon in the chat header to paste and save your Gemini API key directly in your browser.
+  - **Configuration File**: Set `window.VIKAMOUR_CONFIG.GEMINI_API_KEY` in `gemini-config.js`.
+- **Intelligent Offline Fallback Engine**: If no API key is supplied or network quota is unavailable, the intelligent Atelier Stock Matcher automatically activates to provide personalized suggestions.
+
+### 7. ⚡ Supabase Cloud Database & Authentication
 - **Live Cloud Database Integration**: Connects with PostgreSQL via Supabase for real-time e-commerce operations.
 - **Database Schema & Migrations (`supabase-schema.sql`)**:
   - `products`: Dynamic catalog with JSONB colors, sizes, images, stock, and pricing.
