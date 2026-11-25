@@ -220,12 +220,13 @@ function initHeaderScroll() {
 
 function initCurrencySelector() {
   const select = document.getElementById('currencySelect');
-  if (!select) return;
+  const mobileSelect = document.getElementById('mobileCurrencySelect');
 
-  select.value = shopState.currency;
-  select.addEventListener('change', (e) => {
-    shopState.currency = e.target.value;
+  const updateCurrency = (newCurrency) => {
+    shopState.currency = newCurrency;
     localStorage.setItem('vikamour_currency', shopState.currency);
+    if (select) select.value = shopState.currency;
+    if (mobileSelect) mobileSelect.value = shopState.currency;
     renderProducts();
     renderCart();
     renderWishlist();
@@ -233,7 +234,16 @@ function initCurrencySelector() {
       renderModalDetails(shopState.activeModalProduct);
     }
     showToast(`Currency updated to ${shopState.currency}`, 'info');
-  });
+  };
+
+  if (select) {
+    select.value = shopState.currency;
+    select.addEventListener('change', (e) => updateCurrency(e.target.value));
+  }
+  if (mobileSelect) {
+    mobileSelect.value = shopState.currency;
+    mobileSelect.addEventListener('change', (e) => updateCurrency(e.target.value));
+  }
 }
 
 // -----------------------------------------------------------------------------

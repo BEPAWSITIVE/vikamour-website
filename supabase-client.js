@@ -673,11 +673,19 @@ window.openOrderTrackingModal = function(orderNumber = '') {
 // Setup DOM Event Listeners on Load
 document.addEventListener('DOMContentLoaded', () => {
   const triggerBtn = document.getElementById('accountTriggerBtn');
+  const mobileDrawerAccountBtn = document.getElementById('mobileDrawerAccountBtn');
   const closeBtn = document.getElementById('accountModalCloseBtn');
   const modal = document.getElementById('accountModal');
 
   if (triggerBtn) {
     triggerBtn.addEventListener('click', () => openAccountModal('signIn'));
+  }
+
+  if (mobileDrawerAccountBtn) {
+    mobileDrawerAccountBtn.addEventListener('click', () => {
+      if (typeof window.closeAllDrawers === 'function') window.closeAllDrawers();
+      openAccountModal('signIn');
+    });
   }
 
   if (closeBtn) {

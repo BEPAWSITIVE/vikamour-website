@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://images.unsplash.com https://*.supabase.co; connect-src 'self' https://*.supabase.co wss://*.supabase.co; frame-ancestors 'self';" />
@@ -694,6 +694,26 @@
       <div class="brand-name" style="font-size: 1.25rem;">VIKAMOUR</div>
       <button class="drawer-close-btn" id="mobileDrawerClose" aria-label="Close navigation">&times;</button>
     </div>
+    
+    <!-- Mobile Drawer Account & Currency Hub -->
+    <div class="mobile-drawer-account-bar">
+      <button class="mobile-drawer-account-btn" id="mobileDrawerAccountBtn" onclick="closeAllDrawers(); if(window.VikamourSupabase) window.VikamourSupabase.openAccountModal('signIn');">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Atelier Account & Sign In</span>
+      </button>
+      <div class="mobile-drawer-currency-row">
+        <label for="mobileCurrencySelect" class="mobile-drawer-currency-label">Currency</label>
+        <select class="mobile-drawer-currency-select" id="mobileCurrencySelect" aria-label="Currency selection">
+          <option value="INR" selected>INR (₹)</option>
+          <option value="USD">USD ($)</option>
+          <option value="EUR">EUR (€)</option>
+          <option value="GBP">GBP (£)</option>
+        </select>
+      </div>
+    </div>
     <ul class="mobile-nav-list">
       <li class="mobile-nav-item"><a href="index.html" onclick="closeAllDrawers()">Home Page</a></li>
       <li class="mobile-nav-item"><a href="shop.html" onclick="closeAllDrawers()">All Outfits</a></li>
@@ -928,61 +948,63 @@
         All Vikamour ethnic garments are tailored for comfortable festive drape. If you are between sizes, we recommend sizing up for kalidar flared silhouettes.
       </p>
 
-      <table class="size-guide-table">
-        <thead>
-          <tr>
-            <th>Size</th>
-            <th>Bust (inches)</th>
-            <th>Waist (inches)</th>
-            <th>Hip (inches)</th>
-            <th>Kurta Length</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>XS</strong></td>
-            <td>34"</td>
-            <td>28"</td>
-            <td>38"</td>
-            <td>44"</td>
-          </tr>
-          <tr>
-            <td><strong>S</strong></td>
-            <td>36"</td>
-            <td>30"</td>
-            <td>40"</td>
-            <td>45"</td>
-          </tr>
-          <tr>
-            <td><strong>M</strong></td>
-            <td>38"</td>
-            <td>32"</td>
-            <td>42"</td>
-            <td>45"</td>
-          </tr>
-          <tr>
-            <td><strong>L</strong></td>
-            <td>40"</td>
-            <td>34"</td>
-            <td>44"</td>
-            <td>46"</td>
-          </tr>
-          <tr>
-            <td><strong>XL</strong></td>
-            <td>42"</td>
-            <td>36"</td>
-            <td>46"</td>
-            <td>46"</td>
-          </tr>
-          <tr>
-            <td><strong>XXL</strong></td>
-            <td>44"</td>
-            <td>38"</td>
-            <td>48"</td>
-            <td>46"</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="size-guide-table-wrap">
+        <table class="size-guide-table">
+          <thead>
+            <tr>
+              <th>Size</th>
+              <th>Bust (inches)</th>
+              <th>Waist (inches)</th>
+              <th>Hip (inches)</th>
+              <th>Kurta Length</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>XS</strong></td>
+              <td>34"</td>
+              <td>28"</td>
+              <td>38"</td>
+              <td>44"</td>
+            </tr>
+            <tr>
+              <td><strong>S</strong></td>
+              <td>36"</td>
+              <td>30"</td>
+              <td>40"</td>
+              <td>45"</td>
+            </tr>
+            <tr>
+              <td><strong>M</strong></td>
+              <td>38"</td>
+              <td>32"</td>
+              <td>42"</td>
+              <td>45"</td>
+            </tr>
+            <tr>
+              <td><strong>L</strong></td>
+              <td>40"</td>
+              <td>34"</td>
+              <td>44"</td>
+              <td>46"</td>
+            </tr>
+            <tr>
+              <td><strong>XL</strong></td>
+              <td>42"</td>
+              <td>36"</td>
+              <td>46"</td>
+              <td>46"</td>
+            </tr>
+            <tr>
+              <td><strong>XXL</strong></td>
+              <td>44"</td>
+              <td>38"</td>
+              <td>48"</td>
+              <td>46"</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

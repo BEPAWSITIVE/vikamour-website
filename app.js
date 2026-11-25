@@ -214,12 +214,13 @@ function initHeaderScroll() {
 
 function initCurrencySelector() {
   const currencySelect = document.getElementById('currencySelect');
-  if (!currencySelect) return;
-  currencySelect.value = state.currency;
+  const mobileCurrencySelect = document.getElementById('mobileCurrencySelect');
 
-  currencySelect.addEventListener('change', (e) => {
-    state.currency = e.target.value;
+  const updateCurrency = (newCurrency) => {
+    state.currency = newCurrency;
     localStorage.setItem('vikamour_currency', state.currency);
+    if (currencySelect) currencySelect.value = state.currency;
+    if (mobileCurrencySelect) mobileCurrencySelect.value = state.currency;
     renderProducts();
     renderCart();
     renderWishlist();
@@ -227,7 +228,16 @@ function initCurrencySelector() {
       renderModalDetails(state.activeModalProduct);
     }
     showToast(`Currency updated to ${state.currency}`, 'info');
-  });
+  };
+
+  if (currencySelect) {
+    currencySelect.value = state.currency;
+    currencySelect.addEventListener('change', (e) => updateCurrency(e.target.value));
+  }
+  if (mobileCurrencySelect) {
+    mobileCurrencySelect.value = state.currency;
+    mobileCurrencySelect.addEventListener('change', (e) => updateCurrency(e.target.value));
+  }
 }
 
 // -----------------------------------------------------------------------------
